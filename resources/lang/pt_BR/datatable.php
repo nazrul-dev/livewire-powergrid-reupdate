@@ -60,7 +60,4 @@ return [
         'with_trashed'         => 'Com excluídos',
         'only_trashed'         => 'Apenas excluídos',
     ],
-    'multi_sort' => [
-        'message' => 'A classificação múltipla está ativa',
-    ],
 ];

@@ -39,8 +39,6 @@ class Actions
 
     public ?string $bladeComponent = null;
 
-    public ?string $customRender = null;
-
     public ComponentAttributeBag $bladeComponentParams;
 
     protected array $attributes = [];
@@ -69,7 +67,6 @@ class Actions
         $this->attributes();
         $this->route();
         $this->id();
-        $this->customRender();
 
         if ($this->hasAttributesInComponentBag('wire:click')
             || $this->action->caption
@@ -85,35 +82,27 @@ class Actions
 
     private function initializeParameters(): void
     {
-        $customParams = resolve(ActionRender::class)->recoverFromButton($this->action, $this->row);
-
-        if (filled($customParams) && is_array($customParams['custom-action'])) {
-            $this->parameters = $customParams['custom-action'];
-
-            return;
-        }
-
         if ($this->action->singleParam) {
-            $this->parameters = $this->helperClass->makeActionParameter((array)$this->action->params, $this->row);
+            $this->parameters = $this->helperClass->makeActionParameter($this->action->params, $this->row);
 
             return;
         }
 
-        $this->parameters = $this->helperClass->makeActionParameters((array)$this->action->params, $this->row);
+        $this->parameters = $this->helperClass->makeActionParameters($this->action->params, $this->row);
     }
 
     private function actionRules(): void
     {
         $rules = resolve(ActionRules::class)->recoverFromButton($this->action, $this->row);
 
-        $this->ruleRedirect       = (array) data_get($rules, 'redirect', []);
-        $this->ruleDisabled       = boolval(data_get($rules, 'disable', false));
-        $this->ruleHide           = boolval(data_get($rules, 'hide', false));
-        $this->ruleAttributes     = (array) (data_get($rules, 'setAttribute', []));
-        $this->ruleBladeComponent = (array) (data_get($rules, 'bladeComponent', []));
-        $this->ruleEmit           = (array) data_get($rules, 'emit', []);
-        $this->ruleEmitTo         = (array) data_get($rules, 'emitTo', []);
-        $this->ruleCaption        = strval(data_get($rules, 'caption'));
+        $this->ruleRedirect          = (array) data_get($rules, 'redirect', []);
+        $this->ruleDisabled          = boolval(data_get($rules, 'disable', false));
+        $this->ruleHide              = boolval(data_get($rules, 'hide', false));
+        $this->ruleAttributes        = (array) (data_get($rules, 'setAttribute', []));
+        $this->ruleBladeComponent    = (array) (data_get($rules, 'bladeComponent', []));
+        $this->ruleEmit              = (array) data_get($rules, 'emit', []);
+        $this->ruleEmitTo            = (array) data_get($rules, 'emitTo', []);
+        $this->ruleCaption           = strval(data_get($rules, 'caption'));
     }
 
     private function attributes(): void
@@ -202,7 +191,7 @@ class Actions
             return;
         }
 
-        $to = $this->ruleEmitTo['to'] ?? $this->action->to;
+        $to  =  $this->ruleEmitTo['to'] ?? $this->action->to;
 
         $event = $this->ruleEmitTo['event'] ?? $this->action->event;
 
@@ -289,7 +278,7 @@ class Actions
         ]);
     }
 
-    public function caption(): ?string
+    public function caption(): string
     {
         return $this->ruleCaption ?: $this->action->caption;
     }
@@ -299,19 +288,11 @@ class Actions
         $component = $this->action->bladeComponent;
 
         if (filled($this->ruleBladeComponent)) {
-            $component  = $this->ruleBladeComponent['component'];
-            $parameters = $this->helperClass->makeActionParameters((array) data_get($this->ruleBladeComponent, 'params', []), $this->row);
+            $component     = $this->ruleBladeComponent['component'];
+            $parameters    = $this->helperClass->makeActionParameters((array) data_get($this->ruleBladeComponent, 'params', []), $this->row);
         }
 
-        $customParams = resolve(ActionRender::class)->recoverFromButton($this->action, $this->row);
-
-        if (filled($customParams) && is_array($customParams['custom-action'])) {
-            $parameters = $customParams['custom-action'];
-        } else {
-            $parameters = $parameters ?? $this->parameters;
-        }
-
-        $this->bladeComponentParams = new ComponentAttributeBag($parameters);
+        $this->bladeComponentParams = new ComponentAttributeBag($parameters ?? $this->parameters);
 
         $this->bladeComponent = $component;
     }
@@ -336,15 +317,6 @@ class Actions
             $this->componentBag = $this->componentBag->merge([
                 'id' => $this->action->id . '-' . $this->row->{$this->primaryKey},
             ]);
-        }
-    }
-
-    private function customRender(): void
-    {
-        $customParams = resolve(ActionRender::class)->recoverFromButton($this->action, $this->row);
-
-        if (filled($customParams) && is_string($customParams['custom-action'])) {
-            $this->customRender = $customParams['custom-action'];
         }
     }
 

@@ -4,7 +4,10 @@ title: "[Bug]: "
 body:
   - type: markdown
     attributes:
-      value: "## ⚡ PowerGrid ⚡ Bug Report"
+      value: "# ⚡ PowerGrid ⚡ Bug Report"
+  - type: markdown
+    attributes:
+      value: "<table><tr><td>❗ You <b>MUST</b> use this template to submit an issue or it will be CLOSED. ❗</td></tr></table><br/>"
   - type: markdown
     attributes:
       value: "Thank you for reporting a bug and helping us to improve our software!"
@@ -79,30 +82,25 @@ body:
     attributes:
       value: "You can run `composer show -i` and `npm list` to list installed package with their versions."
   - type: input
-    id: PHP
-    attributes:
-      label: PHP Version
-      placeholder: ex. 8.0.1
-  - type: input
     id: PowerGrid
     attributes:
       label: PowerGrid
-      placeholder: ex. 4.4.1
+      placeholder: ex. 0.0.1
   - type: input
     id: Laravel
     attributes:
       label: Laravel
-      placeholder: ex. 9.0.1
+      placeholder: ex. 0.0.1
   - type: input
     id: Livewire
     attributes:
       label: Livewire
-      placeholder: ex. 2.10.1
+      placeholder: ex. 0.0.1
   - type: input
     id: Alpine-JS
     attributes:
       label: Alpine JS
-      placeholder: ex. 3.0.1
+      placeholder: ex. 0.0.1
   - type: dropdown
     attributes:
       label: Theme

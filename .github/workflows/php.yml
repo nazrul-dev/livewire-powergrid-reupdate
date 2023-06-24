@@ -1,6 +1,14 @@
 name: Powergrid Tests
 
-on: ['push', 'pull_request']
+on:
+  push:
+    branches:
+      - main
+      - dev
+
+  pull_request:
+    types: [ ready_for_review, synchronize, opened ]
+    branches: [ main, dev ]
 
 jobs:
   build:
@@ -13,7 +21,7 @@ jobs:
           MYSQL_ROOT_PASSWORD: password
           MYSQL_DATABASE: powergridtest
         ports:
-          - 3307:3306
+         - 3307:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
       postgres:
@@ -23,17 +31,21 @@ jobs:
           POSTGRES_PASSWORD: password
           POSTGRES_DB: powergridtest
         ports:
-          - 5433:5432
+        - 5433:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     strategy:
       matrix:
-        php: [ 8.2, 8.1 ]
-        laravel: [ 10.* ]
+        php: [ 8.1, 8.0 ]
+        laravel: [ 10.*, 9.*, ^8.75 ]
         dependency-version: [ prefer-stable ]
         include:
           - laravel: 10.*
             testbench: 8.*
+          - laravel: 9.*
+            testbench: 7.*
+          - laravel: ^8.75
+            testbench: 6.*
         exclude:
           - php: 8.0
             laravel: 10.*
@@ -42,7 +54,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3.1.0
+        uses: actions/checkout@v2
 
       - name: Setup PHP, with composer and extensions
         uses: shivammathur/setup-php@v2
@@ -57,30 +69,32 @@ jobs:
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"
 
       - name: Cache composer dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v2
         with:
-          path: $(composer config cache-files-dir)
+          path: ${{ steps.composer-cache.outputs.dir }}
           key: dependencies-laravel-${{ matrix.laravel }}-php-${{ matrix.php }}-composer-${{ hashFiles('composer.json') }}
           restore-keys: dependencies-laravel-${{ matrix.laravel }}-php-${{ matrix.php }}-composer-
 
       - name: Install Composer dependencies
         run: |
           composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
-          rm composer.lock
-          composer require openspout/openspout
-#          composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
-      - name: Pint
+          composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
+
+      - name: Cs Fixer
         if: matrix.php == '8.1'
-        run: composer test:pint
+        run: ./vendor/bin/php-cs-fixer fix --verbose --dry-run --using-cache=no --stop-on-violation
 
       - name: Larastan
-        run: composer test:types
+        run: git update-index --chmod=+x ./larastan.sh && bash ./larastan.sh
 
-      - name: SQLite
-        run: composer test:sqlite
+      - name: Testing with SQLite
+        run: |
+          ./vendor/bin/pest --configuration phpunit.sqlite.xml
 
-      - name: MySQL
-        run: composer test:mysql
+      - name: Testing with MySQL
+        run: |
+            ./vendor/bin/pest --configuration phpunit.mysql.xml
 
-      - name: PostgreSQL
-        run: composer test:pgsql
+      - name: Testing with PostgreSQL
+        run: |
+            ./vendor/bin/pest --configuration phpunit.pgsql.xml

@@ -7,9 +7,8 @@ use Illuminate\Support\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Rules\{Rule, RuleActions};
-use PowerComponents\LivewirePowerGrid\Filters\Filter;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
-use PowerComponents\LivewirePowerGrid\{Button, Column, Exportable, Footer, Header, PowerGrid, PowerGridComponent, PowerGridColumns};
+use PowerComponents\LivewirePowerGrid\{Button, Column, Exportable, Footer, Header, PowerGrid, PowerGridComponent, PowerGridEloquent};
 
 final class {{ componentName }} extends PowerGridComponent
 {
@@ -46,10 +45,10 @@ final class {{ componentName }} extends PowerGridComponent
     */
 
     /**
-     * PowerGrid datasource.
-     *
-     * @return Builder<\{{ modelName }}>
-     */
+    * PowerGrid datasource.
+    *
+    * @return Builder<\{{ modelName }}>
+    */
     public function datasource(): Builder
     {
         return {{ modelLastName }}::query();
@@ -84,9 +83,9 @@ final class {{ componentName }} extends PowerGridComponent
     |    the database using the `e()` Laravel Helper function.
     |
     */
-    public function addColumns(): PowerGridColumns
+    public function addColumns(): PowerGridEloquent
     {
-        return PowerGrid::columns()
+        return PowerGrid::eloquent()
             ->addColumn('id')
             ->addColumn('name')
             ->addColumn('name_lower', fn ({{ modelLastName }} $model) => strtolower(e($model->name)))
@@ -103,7 +102,7 @@ final class {{ componentName }} extends PowerGridComponent
     |
     */
 
-    /**
+     /**
      * PowerGrid Columns.
      *
      * @return array<int, Column>
@@ -117,26 +116,15 @@ final class {{ componentName }} extends PowerGridComponent
 
             Column::make('Name', 'name')
                 ->searchable()
+                ->makeInputText('name')
                 ->sortable(),
 
             Column::make('Created at', 'created_at')
                 ->hidden(),
 
             Column::make('Created at', 'created_at_formatted', 'created_at')
+                ->makeInputDatePicker()
                 ->searchable()
-        ];
-    }
-
-    /**
-     * PowerGrid Filters.
-     *
-     * @return array<int, Filter>
-     */
-    public function filters(): array
-    {
-        return [
-            Filter::inputText('name'),
-            Filter::datepicker('created_at_formatted', 'created_at'),
         ];
     }
 
@@ -148,7 +136,7 @@ final class {{ componentName }} extends PowerGridComponent
     |
     */
 
-    /**
+     /**
      * PowerGrid {{ modelLastName }} Action Buttons.
      *
      * @return array<int, Button>
@@ -178,7 +166,7 @@ final class {{ componentName }} extends PowerGridComponent
     |
     */
 
-    /**
+     /**
      * PowerGrid {{ modelLastName }} Action Rules.
      *
      * @return array<int, RuleActions>

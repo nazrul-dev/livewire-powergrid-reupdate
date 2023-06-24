@@ -6,8 +6,6 @@ use function Pest\Livewire\livewire;
 
 use PowerComponents\LivewirePowerGrid\Tests\Actions\TestDatabase;
 
-use PowerComponents\LivewirePowerGrid\Tests\DishesSoftDeletesTable;
-
 beforeEach(
     function () {
         TestDatabase::seed(dishesUndeleted());
@@ -24,7 +22,7 @@ it('should display softDeletes button', function (string $component, string $the
         ->assertSeeHtml("emit('pg:softDeletes-default', 'withTrashed')")
         ->assertSeeHtml("emit('pg:softDeletes-default', 'onlyTrashed')")
         ->assertSeeHtml("emit('pg:softDeletes-default', '')");
-})->with('soft_deletes');
+})->with('themes with softDeletes');
 
 it('should list only undeleted records', function (string $component, string $theme) {
     livewire($component)
@@ -40,7 +38,7 @@ it('should list only undeleted records', function (string $component, string $th
         ->assertSeeHtml('Dish I')
         ->assertDontSeeHtml('Dish A')
         ->assertDontSeeHtml('Dish B');
-})->with('soft_deletes');
+})->with('themes with softDeletes');
 
 it('should list all records including excluded', function (string $component, string $theme) {
     livewire($component)
@@ -54,7 +52,7 @@ it('should list all records including excluded', function (string $component, st
         ->assertSeeHtml('Dish G')
         ->assertSeeHtml('Dish H')
         ->assertSeeHtml('Dish I');
-})->with('soft_deletes')->skip();
+})->with('themes with softDeletes');
 
 it('should list only deleted records', function (string $component, string $theme) {
     livewire($component)
@@ -70,7 +68,7 @@ it('should list only deleted records', function (string $component, string $them
         ->assertDontSeeHtml('Dish I')
         ->assertSeeHtml('Dish A')
         ->assertSeeHtml('Dish B');
-})->with('soft_deletes')->skip();
+})->with('themes with softDeletes');
 
 it('should be able to see a warning message when showMessageSoftDeletes is true and softDeletes === withTrashed or onlyTrashed', function (string $component, string $theme) {
     livewire($component)
@@ -91,12 +89,7 @@ it('should be able to see a warning message when showMessageSoftDeletes is true 
         ->set('softDeletes', 'withTrashed')
         ->assertDontSee(trans('livewire-powergrid::datatable.soft_deletes.message_with_trashed'))
         ->assertDontSee(trans('livewire-powergrid::datatable.soft_deletes.message_only_trashed'));
-})->with('soft_deletes');
-
-dataset('soft_deletes', [
-    [DishesSoftDeletesTable::class, 'tailwind'],
-    [DishesSoftDeletesTable::class, 'bootstrap'],
-]);
+})->with('themes with softDeletes');
 
 /**
  * Small Dish dataset for sorting test

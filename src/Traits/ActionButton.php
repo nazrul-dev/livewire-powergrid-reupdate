@@ -20,12 +20,6 @@ trait ActionButton
 
         /** @var Button $action */
         foreach ($this->actions as $action) {
-            unset($action->render);
-
-            if (is_callable($action->params)) {
-                $action->params = [];
-            }
-
             if (isset($action->route)) {
                 $this->actionRoutes[$action->action] = $action->route;
             }

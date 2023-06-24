@@ -11,6 +11,12 @@ export default (params) => ({
     element: null,
     lastRequest: null,
     init() {
+        const lang = this.locale.locale;
+
+        if (typeof lang !== 'undefined') {
+            this.locale.locale = require("flatpickr/dist/l10n/"+lang+".js").default[lang];
+        }
+
         window.addEventListener(`pg:clear_flatpickr::${this.tableName}:${this.dataField}`, () => {
             if (this.$refs.rangeInput && this.element) {
                 this.element.clear()
@@ -25,19 +31,6 @@ export default (params) => ({
             }
         })
 
-        const lang = this.locale.locale;
-
-        if (typeof lang !== 'undefined') {
-            this.locale.locale = require("flatpickr/dist/l10n/"+lang+".js").default[lang];
-        }
-
-        const options = this.getOptions()
-
-        if(this.$refs.rangeInput) {
-            this.element = flatpickr(this.$refs.rangeInput, options);
-        }
-    },
-    getOptions() {
         const options = {
             mode: 'range',
             defaultHour: 0,
@@ -58,7 +51,7 @@ export default (params) => ({
         }
 
         options.onClose = (selectedDates, dateStr, instance) => {
-            selectedDates = selectedDates.map((date) => this.element.formatDate(date, 'Y-m-d'));
+            selectedDates = selectedDates.map((date) => this.element.formatDate(date, 'Y-m-d H:i:S'));
 
             const key = `${this.tableName}::${this.dataField}::${selectedDates}`
             const encrypted = Buffer.from(key).toString('base64')
@@ -69,15 +62,18 @@ export default (params) => ({
                     field: this.dataField,
                     timezone: this.customConfig.timezone ?? new Date().toString().match(/([-\+][0-9]+)\s/)[1],
                     values: this.filterKey,
+                    type: this.type,
                     label: this.label,
                     dateStr: dateStr,
-                    tableName: this.tableName,
-                    type: this.type,
                     enableTime: this.customConfig.enableTime === undefined ? false : this.customConfig.enableTime
                 });
+
+                this.lastRequest = encrypted;
             }
         }
 
-        return options;
-    }
+        if(this.$refs.rangeInput) {
+            this.element = flatpickr(this.$refs.rangeInput, options);
+        }
+    },
 })

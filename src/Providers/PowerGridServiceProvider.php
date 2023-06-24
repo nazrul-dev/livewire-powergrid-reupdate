@@ -2,10 +2,8 @@
 
 namespace PowerComponents\LivewirePowerGrid\Providers;
 
-use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\{Facades\Blade, Facades\View, ServiceProvider};
 use PowerComponents\LivewirePowerGrid\Commands\{CreateCommand, DemoCommand, PublishCommand, UpdateCommand};
-use PowerComponents\LivewirePowerGrid\Filters\FilterManager;
 use PowerComponents\LivewirePowerGrid\PowerGridManager;
 use PowerComponents\LivewirePowerGrid\Rules\RuleManager;
 use PowerComponents\LivewirePowerGrid\Themes\ThemeManager;
@@ -27,6 +25,14 @@ class PowerGridServiceProvider extends ServiceProvider
         $this->publishViews();
         $this->publishConfigs();
         $this->loadTranslationsFrom(__DIR__ . '/../../resources/lang', $this->packageName);
+        $this->createDirectives();
+
+        View::composer('livewire-powergrid::assets.styles', function ($view) {
+            $view->cssPath = __DIR__ . '/../../dist/powergrid.css';
+        });
+        View::composer('livewire-powergrid::assets.scripts', function ($view) {
+            $view->jsPath  = __DIR__ . '/../../dist/powergrid.js';
+        });
     }
 
     public function register(): void
@@ -37,7 +43,6 @@ class PowerGridServiceProvider extends ServiceProvider
         );
 
         $file = __DIR__ . '/../functions.php';
-
         if (file_exists($file)) {
             require_once($file);
         }
@@ -45,7 +50,6 @@ class PowerGridServiceProvider extends ServiceProvider
         $this->app->alias(PowerGridManager::class, 'powergrid');
         $this->app->alias(ThemeManager::class, 'theme');
         $this->app->alias(RuleManager::class, 'rule');
-        $this->app->alias(FilterManager::class, 'filter');
     }
 
     private function publishViews(): void
@@ -55,11 +59,6 @@ class PowerGridServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../../resources/views' => resource_path('views/vendor/' . $this->packageName),
         ], $this->packageName . '-views');
-
-        Blade::anonymousComponentPath(
-            __DIR__ . '/../../resources/views/tests',
-            'tests'
-        );
     }
 
     private function publishConfigs(): void
@@ -69,5 +68,20 @@ class PowerGridServiceProvider extends ServiceProvider
         ], 'livewire-powergrid-config');
 
         $this->publishes([__DIR__ . '/../../resources/lang' => lang_path('vendor/' . $this->packageName)], $this->packageName . '-lang');
+    }
+
+    private function createDirectives(): void
+    {
+        Blade::directive('powerGridStyles', function () {
+            return "<?php echo view('livewire-powergrid::assets.styles')->render(); ?>";
+        });
+
+        Blade::directive('powerGridScripts', function () {
+            return "<?php echo view('livewire-powergrid::assets.scripts')->render(); ?>";
+        });
+
+        View::composer('livewire-powergrid::assets.styles', function ($view) {
+            $view->cssPath = __DIR__ . '/../dist/powergrid.css';
+        });
     }
 }

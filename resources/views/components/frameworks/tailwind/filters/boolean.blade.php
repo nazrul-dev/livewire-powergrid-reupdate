@@ -3,49 +3,35 @@
     'column' => null,
     'class' => '',
     'inline' => null,
-    'filter' => null,
+    'booleanFilter' => null,
 ])
-@php
-    unset($filter['className']);
-    extract($filter);
-    
-    $defaultAttributes = \PowerComponents\LivewirePowerGrid\Filters\FilterBoolean::getWireAttributes($field, $title);
-    
-    $selectClasses = Arr::toCssClasses([$theme->selectClass, $class, data_get($column, 'headerClass'), 'power_grid']);
-    
-    $params = array_merge([...data_get($filter, 'attributes'), ...$defaultAttributes], $filter);
-@endphp
-
-@if ($params['component'])
-    @unset($params['attributes'])
-
-    <x-dynamic-component
-        :component="$params['component']"
-        :attributes="new \Illuminate\View\ComponentAttributeBag($params)"
-    />
-@else
-    <div
-        @class([$theme->baseClass])
-        style="{{ $theme->baseStyle }}"
-    >
-        @if (!$inline)
-            <label class="block text-sm font-medium text-pg-primary-700 dark:text-pg-primary-300">
-                {{ $title }}
-            </label>
-        @endif
-        <div class="relative">
-            <select
-                class="{{ $selectClasses }}"
-                style="{{ data_get($column, 'headerStyle') }}"
-                {{ $defaultAttributes['selectAttributes'] }}
-            >
-                <option value="all">{{ trans('livewire-powergrid::datatable.boolean_filter.all') }}</option>
-                <option value="true">{{ $trueLabel }}</option>
-                <option value="false">{{ $falseLabel }}</option>
-            </select>
-            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-pg-primary-700">
-                <x-livewire-powergrid::icons.down class="w-4 h-4 dark:text-gray-300" />
-            </div>
+<div>
+    @if(filled($booleanFilter))
+        <div @class([
+            'p-2' => !$inline,
+            $theme->baseClass,
+            $booleanFilter['class'] => $booleanFilter['class'] != ''
+        ]) style="{{ $theme->baseStyle }}">
+            @if(!$inline)
+                <label class="text-gray-700 dark:text-gray-300"
+                       for="input_boolean_filter_{{ data_get($booleanFilter, 'field') }}">
+                    {{ data_get($booleanFilter, 'label') }}
+                </label>
+            @endif
+                <div class="relative">
+                    <select id="input_boolean_filter_{{ data_get($booleanFilter, 'field') }}"
+                            class="power_grid {{ $theme->selectClass }} {{ $class }} {{ data_get($column, 'headerClass') }}"
+                            style="{{ data_get($column, 'headerStyle') }}"
+                            wire:input.lazy="filterBoolean('{{ $booleanFilter['dataField'] }}', $event.target.value, '{{ $booleanFilter['label'] }}')"
+                            wire:model="filters.boolean.{{ $booleanFilter['dataField'] }}">
+                        <option value="all">{{ trans('livewire-powergrid::datatable.boolean_filter.all') }}</option>
+                        <option value="true">{{ data_get($booleanFilter, 'true_label') }}</option>
+                        <option value="false">{{ data_get($booleanFilter, 'false_label') }}</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-700">
+                        <x-livewire-powergrid::icons.down class="w-4 h-4 dark:text-gray-300"/>
+                    </div>
+                </div>
         </div>
-    </div>
-@endif
+    @endif
+</div>

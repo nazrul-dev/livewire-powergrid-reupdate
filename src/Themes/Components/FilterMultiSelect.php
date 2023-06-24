@@ -4,8 +4,6 @@ namespace PowerComponents\LivewirePowerGrid\Themes\Components;
 
 class FilterMultiSelect
 {
-    public string $selectClass = '';
-
     public string $view = '';
 
     public string $baseClass = '';
@@ -21,16 +19,9 @@ class FilterMultiSelect
         return $this;
     }
 
-    public function select(string $attrClass = ''): FilterMultiSelect
-    {
-        $this->selectClass = $attrClass;
-
-        return $this;
-    }
-
     public function view(string $view): FilterMultiSelect
     {
-        $this->view = $view;
+        $this->view    = $view;
 
         return $this;
     }

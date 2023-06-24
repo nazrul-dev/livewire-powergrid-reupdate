@@ -5,17 +5,15 @@ namespace PowerComponents\LivewirePowerGrid\Tests;
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
-use PowerComponents\LivewirePowerGrid\{
-    Button,
+use PowerComponents\LivewirePowerGrid\{Button,
     Column,
     Detail,
     Footer,
     Header,
     PowerGrid,
-    PowerGridColumns,
     PowerGridComponent,
-    Rules\Rule
-};
+    PowerGridEloquent,
+    Rules\Rule};
 
 class DishesSetUpTable extends PowerGridComponent
 {
@@ -27,15 +25,9 @@ class DishesSetUpTable extends PowerGridComponent
 
     public bool $testFooter = false;
 
-    public array $testCache = [];
-
     public function setUp(): array
     {
         $this->showCheckBox();
-
-        if ($this->testCache) {
-            return $this->testCache;
-        }
 
         if ($this->testHeader) {
             return [
@@ -52,6 +44,7 @@ class DishesSetUpTable extends PowerGridComponent
                 Footer::make()
                     ->includeViewOnTop('livewire-powergrid::tests.footer-top')
                     ->includeViewOnBottom('livewire-powergrid::tests.footer-bottom'),
+
             ];
         }
     }
@@ -79,9 +72,9 @@ class DishesSetUpTable extends PowerGridComponent
             ->select('dishes.*', 'categories.name as category_name');
     }
 
-    public function addColumns(): PowerGridColumns
+    public function addColumns(): PowerGridEloquent
     {
-        return PowerGrid::columns()
+        return PowerGrid::eloquent()
             ->addColumn('id')
             ->addColumn('name');
     }

@@ -8,33 +8,33 @@ use Exception;
 trait Listeners
 {
     /**
-     * @param array $payload
+     * @param array $data
      * @return void
      * @throws Exception
      */
-    public function inputTextChanged(array $payload = []): void
+    public function inputTextChanged(array $data = []): void
     {
-        $id    = $payload['id'];
-        $field = $payload['field'];
+        $id         = $data['id'];
+        $field      = $data['field'];
 
-        $this->{$field}[$id] = $payload['value'];
+        $this->{$field}[$id] = $data['value'];
 
-        $this->onUpdatedEditable($id, $field, $payload['value']);
+        $this->onUpdatedEditable($id, $field, $data['value']);
 
         $this->dispatchBrowserEvent('pg:editable-close-' . $id);
     }
 
     /**
-     * @param array $payload
+     * @param array $data
      * @return void
      * @throws Exception
      */
-    public function toggleableChanged(array $payload = []): void
+    public function toggleableChanged(array $data = []): void
     {
-        $id    = $payload['id'];
-        $field = $payload['field'];
+        $id         = $data['id'];
+        $field      = $data['field'];
 
-        $this->onUpdatedToggleable($id, $field, $payload['value']);
+        $this->onUpdatedToggleable($id, $field, $data['value']);
     }
 
     public function onUpdatedEditable(string $id, string $field, string $value): void
@@ -45,27 +45,7 @@ trait Listeners
     {
     }
 
-    public function afterChangedMultiSelectFilter(string $field, array $values): void
-    {
-    }
-
-    public function afterChangedSelectFilter(string $field, string $label, mixed $value): void
-    {
-    }
-
-    public function afterChangedInputTextFilter(string $field, string $label, string $value): void
-    {
-    }
-
-    public function afterChangedBooleanFilter(string $field, string $label, string $value): void
-    {
-    }
-
-    public function afterChangedNumberStartFilter(string $field, string $label, string $value): void
-    {
-    }
-
-    public function afterChangedNumberEndFilter(string $field, string $label, string $value): void
+    public function onUpdatedMultiSelect(string $field, array $values): void
     {
     }
 }

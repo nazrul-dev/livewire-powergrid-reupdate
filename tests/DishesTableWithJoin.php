@@ -3,27 +3,25 @@
 namespace PowerComponents\LivewirePowerGrid\Tests;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Carbon;
-use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
-use PowerComponents\LivewirePowerGrid\{
+use Illuminate\Support\{Carbon, HtmlString};
+use PowerComponents\LivewirePowerGrid\Tests\Models\{Category, Dish};
+use PowerComponents\LivewirePowerGrid\{Button,
     Column,
     Exportable,
     Footer,
     Header,
     PowerGrid,
-    PowerGridColumns,
     PowerGridComponent,
+    PowerGridEloquent,
     Rules\Rule,
-    Traits\ActionButton
-};
+    Services\ExportOption,
+    Traits\ActionButton};
 
 class DishesTableWithJoin extends PowerGridComponent
 {
     use ActionButton;
 
     public array $eventId = [];
-
-    public array $testFilters = [];
 
     protected function getListeners()
     {
@@ -88,9 +86,16 @@ class DishesTableWithJoin extends PowerGridComponent
         ];
     }
 
-    public function addColumns(): PowerGridColumns
+    public function inputRangeConfig(): array
     {
-        return PowerGrid::columns()
+        return [
+            'price' => ['thousands' => '.', 'decimal' => ','],
+        ];
+    }
+
+    public function addColumns(): PowerGridEloquent
+    {
+        return PowerGrid::eloquent()
             ->addColumn('id')
             ->addColumn('dish_name', function (Dish $dish) {
                 return $dish->name;
@@ -152,24 +157,34 @@ class DishesTableWithJoin extends PowerGridComponent
                 ->field('dish_name')
                 ->searchable()
                 ->clickToCopy(true)
+                ->makeInputText('name')
                 ->placeholder('Prato placeholder')
                 ->sortable(),
 
             Column::add()
                 ->title('Serving at')
                 ->field('serving_at')
-                ->sortable(),
+                ->sortable()
+                ->makeInputSelect(Dish::all(), 'serving_at', 'serving_at', ['live-search' => true]),
 
             Column::add()
-                ->title(__('Category'))
+                ->title(__('Categoria'))
                 ->field('category_name', 'categories.name')
                 ->sortable()
-                ->placeholder('Category placeholder'),
+                ->placeholder('Categoria placeholder')
+                ->makeInputSelect(Category::all(), 'name', 'category_id'),
+
+            Column::add()
+                ->title(__('Multiple'))
+                ->field('category_name')
+                ->placeholder('Categoria')
+                ->makeInputMultiSelect(Category::query()->take(5)->get(), 'name', 'category_id'),
 
             Column::add()
                 ->title(__('Preço'))
                 ->field('price_BRL')
-                ->editOnClick($canEdit),
+                ->editOnClick($canEdit)
+                ->makeInputRange('price'),
 
             Column::add()
                 ->title(__('Preço de Venda'))
@@ -178,22 +193,26 @@ class DishesTableWithJoin extends PowerGridComponent
             Column::add()
                 ->title(__('Calorias'))
                 ->field('calories')
+                ->makeInputRange('calories')
                 ->sortable(),
 
             Column::add()
                 ->title(__('Em Estoque'))
                 ->toggleable(true, 'sim', 'não')
+                ->makeBooleanFilter('in_stock', 'sim', 'não')
                 ->sortable()
                 ->field('in_stock'),
 
             Column::add()
                 ->title(__('Created Categories'))
                 ->sortable()
-                ->field('created_at_formatted', 'categories.created_at'),
+                ->field('created_at_formatted', 'categories.created_at')
+                ->makeInputDatePicker('categories.created_at'),
 
             Column::add()
                 ->title(__('Data de produção'))
-                ->field('produced_at_formatted'),
+                ->field('produced_at_formatted')
+                ->makeInputDatePicker('produced_at'),
         ];
     }
 
@@ -219,7 +238,7 @@ class DishesTableWithJoin extends PowerGridComponent
 
             Rule::rows()
                 ->when(fn ($dish) => $dish->id == 3)
-                ->setAttribute('class', 'bg-pg-secondary-100'),
+                ->setAttribute('class', 'bg-blue-100'),
 
             Rule::button('edit-stock-for-rules')
                 ->when(fn ($dish) => $dish->id == 5)
@@ -229,11 +248,6 @@ class DishesTableWithJoin extends PowerGridComponent
                 ->when(fn ($dish) => $dish->id == 9)
                 ->disable(),
         ];
-    }
-
-    public function filters(): array
-    {
-        return $this->testFilters;
     }
 
     public function bootstrap()

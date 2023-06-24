@@ -6,6 +6,10 @@ table {
     width: 100%;
 }
 
+.power-grid-table input, select, .bootstrap-select, .dropdown-menu {
+    font-size: 0.85rem !important;
+}
+
 .btn-light {
     color: #000;
     background-color: white;
@@ -44,7 +48,7 @@ table {
 }
 
 .page-link {
-    @apply block bg-white text-pg-secondary-800 border-r border-gray-200 outline-none py-2 w-12 text-sm text-center
+    @apply block bg-white text-blue-800 border-r border-gray-200 outline-none py-2 w-12 text-sm text-center
 }
 
 .page-link:last-child {
@@ -52,11 +56,11 @@ table {
 }
 
 .page-link:hover {
-    @apply bg-pg-secondary-700 text-white border-pg-secondary-700
+    @apply bg-blue-700 text-white border-blue-700
 }
 
 .page-item.active .page-link {
-    @apply bg-pg-secondary-700 text-white border-pg-secondary-700
+    @apply bg-blue-700 text-white border-blue-700
 }
 
 .page-item.disabled .page-link {
@@ -97,6 +101,7 @@ table {
     }
 }
 
+
 table thead {
     padding-left: 15px;
     text-transform: uppercase;
@@ -104,6 +109,18 @@ table thead {
     color: #6b6a6a;
     padding-top: 8px;
     padding-bottom: 8px
+}
+
+.dropdown-toggle {
+    background: #fff !important;
+    padding-left: 10px !important;
+    color: #7a7e82 !important
+}
+
+select, .power_grid {
+    opacity: 1 !important;
+    font-size: 0.85rem !important;
+    padding-left: 10px !important;
 }
 
 .badge {
@@ -114,6 +131,19 @@ table thead {
     box-shadow: none!important;
 }
 
+.dropdown-toggle, .dropdown-item {
+    padding-left: 15px;
+    font-size: 0.85rem;
+    color: #454444;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.bootstrap-select {
+    padding-left: 0 !important;
+}
 .btn-group-vertical>.btn, .btn-group>.btn {
     position: relative;
     flex: 1 1 auto;
@@ -142,23 +172,4 @@ table thead {
 
 .power-grid-button {
     width: 100%;
-}
-
-.pg-btn-white {
-    @apply outline-none inline-flex justify-center items-center focus:ring-1 focus:ring-offset-1 bg-white
-    hover:shadow-sm disabled:opacity-80 disabled:cursor-not-allowed rounded-lg gap-x-2 text-sm px-3 py-2 border border-pg-primary-300
-    text-pg-primary-500 hover:bg-pg-primary-100 ring-pg-primary-200
-}
-
-.bs5-rotate-0 {
-    transition: all 0.3s ease;
-    transform: rotate(0deg);
-}
-.bs5-rotate-90 {
-    transition: all 0.3s ease;
-    transform: rotate(90deg);
-}
-.bs5-w-h-1_5em {
-    width: 1.5em;
-    height: 1.5em;
 }

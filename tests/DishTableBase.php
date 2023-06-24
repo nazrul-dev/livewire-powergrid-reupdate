@@ -5,14 +5,13 @@ namespace PowerComponents\LivewirePowerGrid\Tests;
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
-use PowerComponents\LivewirePowerGrid\{
-    Button,
+use PowerComponents\LivewirePowerGrid\{Button,
     Column,
     Footer,
     Header,
     PowerGrid,
-    PowerGridColumns,
     PowerGridComponent,
+    PowerGridEloquent,
 };
 
 class DishTableBase extends PowerGridComponent
@@ -72,26 +71,28 @@ class DishTableBase extends PowerGridComponent
             ->select('dishes.*', 'categories.name as category_name');
     }
 
-    public function addColumns(): PowerGridColumns
+    public function addColumns(): PowerGridEloquent
     {
-        return PowerGrid::columns()
+        return PowerGrid::eloquent()
             ->addColumn('id')
-            ->addColumn('name')
-            ->addColumn('category_id');
+            ->addColumn('name');
     }
 
     public function columns(): array
     {
         return [
-            Column::make('Id', 'id')
+            Column::add()
+                ->title(__('ID'))
+                ->field('id')
                 ->searchable()
                 ->sortable(),
 
-            Column::make('Name', 'name')
+            Column::add()
+                ->title(__('Name'))
+                ->field('name')
                 ->searchable()
+                ->makeInputText('name')
                 ->sortable(),
-
-            Column::make('Category', 'category_name'),
         ];
     }
 

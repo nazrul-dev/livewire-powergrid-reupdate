@@ -29,9 +29,9 @@ it('add rule \'disable\' when dishId === 9', function (string $component, object
         ->set('search', 'Peixada da chef Nábia')
         ->assertDontSeeHtml('disabled="disabled"')
         ->assertSeeHtml('class="text-center"');
-})->with('disable_themes_with_join')->group('actionRules');
+})->with('disable')->group('actionRules');
 
-dataset('disable_themes_with_join', [
+dataset('disable', [
     'tailwind'       => [DishTableBase::class, (object) ['theme' => 'tailwind', 'join' => false]],
     'bootstrap'      => [DishTableBase::class, (object) ['theme' => 'bootstrap', 'join' => false]],
     'tailwind join'  => [DishTableBase::class, (object) ['theme' => 'tailwind', 'join' => true]],

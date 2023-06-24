@@ -4,8 +4,8 @@ use function Pest\Livewire\livewire;
 
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Rules\Rule;
-use PowerComponents\LivewirePowerGrid\Tests\DishTableBase;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
+use PowerComponents\LivewirePowerGrid\Tests\{DishTableBase, RulesHideTable};
 
 it('add rule \'hide\' when dishId == 2', function (string $component, object $params) {
     livewire($component, ['join' => $params->join])
@@ -23,9 +23,9 @@ it('add rule \'hide\' when dishId == 2', function (string $component, object $pa
         ])
         ->assertSeeHtml('wire:click="$emit(&quot;openModal&quot;, &quot;modal-edit&quot;, {&quot;dishId&quot;:1})"')
         ->assertDontSeeHtml('wire:click="$emit(&quot;openModal&quot;, &quot;modal-edit&quot;, {&quot;dishId&quot;:2})"');
-})->with('hide_themes_with_join')->group('actionRules');
+})->with('hide')->group('actionRules');
 
-dataset('hide_themes_with_join', [
+dataset('hide', [
     'tailwind'       => [DishTableBase::class, (object) ['theme' => 'tailwind', 'join' => false]],
     'bootstrap'      => [DishTableBase::class, (object) ['theme' => 'bootstrap', 'join' => false]],
     'tailwind join'  => [DishTableBase::class, (object) ['theme' => 'tailwind', 'join' => true]],

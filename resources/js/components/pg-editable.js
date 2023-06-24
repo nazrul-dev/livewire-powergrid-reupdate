@@ -100,7 +100,7 @@ export default (params) => ({
     },
     htmlSpecialChars(string) {
         const el = document.createElement('div');
-        el.innerHTML = string;
-        return el.textContent;
+        el.innerText = string;
+        return el.innerHTML;
     }
 })

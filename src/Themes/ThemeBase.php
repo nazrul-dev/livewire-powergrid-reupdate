@@ -48,7 +48,6 @@ class ThemeBase extends AbstractTheme
         $this->filterNumber      = $this->filterNumber();
         $this->filterSelect      = $this->filterSelect();
         $this->filterInputText   = $this->filterInputText();
-        $this->searchBox         = $this->searchBox();
 
         return $this;
     }

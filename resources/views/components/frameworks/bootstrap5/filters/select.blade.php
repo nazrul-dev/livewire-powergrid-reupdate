@@ -3,46 +3,27 @@
     'class' => '',
     'column' => null,
     'inline' => null,
-    'filter' => null,
+    'select' => null
 ])
-
-@php
-    $field = strval(data_get($filter, 'field'));
-    $title = strval(data_get($filter, 'title'));
-    
-    $defaultAttributes = \PowerComponents\LivewirePowerGrid\Filters\FilterSelect::getWireAttributes($field, $title);
-    
-    $filterClasses = Arr::toCssClasses([$theme->selectClass, $class, data_get($column, 'headerClass'), 'power_grid']);
-    
-    $params = array_merge([...data_get($filter, 'attributes'), ...$defaultAttributes], $filter);
-@endphp
-
-@if ($params['component'])
-    @unset($params['attributes'])
-
-    <x-dynamic-component
-        :component="$params['component']"
-        :attributes="new \Illuminate\View\ComponentAttributeBag($params)"
-    />
-@else
-    <div
-        class="{{ $theme->baseClass }}"
-        style="{{ $theme->baseStyle }}"
-    >
-        <select
-            class="{{ $filterClasses }}"
-            style="{{ data_get($column, 'headerStyle') }}"
-            {{ $defaultAttributes['selectAttributes'] }}
-        >
-            <option value="">{{ trans('livewire-powergrid::datatable.select.all') }}</option>
-            @foreach (data_get($filter, 'dataSource') as $key => $item)
-                <option
-                    wire:key="select-{{ $tableName }}-{{ $key }}"
-                    value="{{ $item[data_get($filter, 'optionValue')] }}"
-                >
-                    {{ $item[data_get($filter, 'optionLabel')] }}
-                </option>
-            @endforeach
-        </select>
-    </div>
-@endif
+<div>
+    @if(filled($select))
+        <div class="{{ $theme->baseClass }}" style="{{ $theme->baseStyle }}">
+            <select id="input_{!! data_get($select, 'displayField') !!}"
+                    class="power_grid {{ $theme->selectClass }} {{ $class }} {{ data_get($column, 'headerClass') }}"
+                    style="{{ data_get($column, 'headerStyle') }}"
+                    wire:input.debounce.500ms="filterSelect('{{ data_get($select, 'dataField') }}','{{ data_get($select, 'label')  }}')"
+                    wire:model.debounce.500ms="filters.select.{{ data_get($select, 'dataField')  }}">
+                <option>{{ trans('livewire-powergrid::datatable.select.all') }}</option>
+                @foreach(data_get($select, 'data_source') as $relation)
+                    @php
+                        $key = isset($relation['id']) ? 'id' : 'value';
+                        if (isset($relation[$select['dataField']])) $key = $select['dataField'];
+                    @endphp
+                    <option value="{{ data_get($relation, $key) }}">
+                        {{ $relation[data_get($select, 'displayField') ] }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+    @endif
+</div>

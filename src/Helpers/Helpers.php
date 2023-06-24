@@ -3,7 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Helpers;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\{Arr, Collection, Str};
+use Illuminate\Support\{Arr, Str};
 
 class Helpers
 {
@@ -14,11 +14,9 @@ class Helpers
         foreach ($params as $param => $value) {
             if ($row && filled($row->{$value})) {
                 $parameters[$param] = $row->{$value};
-
-                continue;
+            } else {
+                $parameters[$param] = $value;
             }
-
-            $parameters[$param] = $value;
         }
 
         return $parameters;
@@ -29,12 +27,11 @@ class Helpers
         return $this->makeActionParameters($params, $row)[0];
     }
 
-    public function resolveContent(string $currentTable, string $field, Model|\stdClass $row): ?string
+    public function resolveContent(string $currentTable, string $field, Model $row): ?string
     {
         $currentField = $field;
         $replace      = fn ($content) => preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content);
 
-        /** @codeCoverageIgnore */
         if (str_contains($currentField, '.')) {
             $data  = Str::of($field)->explode('.');
             $table = $data->get(0);

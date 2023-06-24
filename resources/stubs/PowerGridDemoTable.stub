@@ -21,21 +21,16 @@ use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\{Button,
     Column,
     Exportable,
-    Filters\Filter,
     Footer,
     Header,
     PowerGrid,
     PowerGridComponent,
-    PowerGridColumns,
+    PowerGridEloquent,
     Rules\RuleActions};
 
 final class PowerGridDemoTable extends PowerGridComponent
 {
     use ActionButton;
-
-    public array $inputTextOptions = [
-        'contains',
-    ];
 
     // Demo users. Should be removed in a real project.
     protected $demoUsers = null;
@@ -116,7 +111,7 @@ final class PowerGridDemoTable extends PowerGridComponent
     * PowerGrid datasource.
     *
     */
-    public function datasource()
+    public function datasource(): Collection
     {
         return $this->demoUsers(); //Get demo users. Should be removed in a real project.
         //return User::query();
@@ -151,9 +146,9 @@ final class PowerGridDemoTable extends PowerGridComponent
     |    the database using the `e()` Laravel Helper function.
     |
     */
-    public function addColumns(): PowerGridColumns
+    public function addColumns(): PowerGridEloquent
     {
-        return PowerGrid::columns()
+        return PowerGrid::eloquent()
             ->addColumn('id')
             ->addColumn('name')
             ->addColumn('email')
@@ -212,25 +207,32 @@ final class PowerGridDemoTable extends PowerGridComponent
         $canCopy = true;
 
         return [
-            Column::make('ID', 'id'),
+            Column::make('ID', 'id')
+                ->makeInputRange(), //Filter for min-max Range
 
             Column::make('Full name', 'name')
                 ->sortable() //Adds sorting button to the header
                 ->searchable() //Includes column in search option (top page)
+                ->makeInputText()//Filter for searching text
                 ->editOnClick($canEdit), //Allows user to edit information on click
 
             Column::make('Email address', 'email')
                 ->searchable()
+                ->makeInputText()
                 ->clickToCopy($canCopy), //Button for copy to clipboard
 
-            Column::make('US State', 'state_in_usa'),
+            Column::make('US State', 'state_in_usa')
+                ->makeInputSelect($this->demoUsers(), 'state_in_usa', 'id'), //Multiselect filter
 
             Column::make('Laracon visitor?', 'laracon')
-                ->sortable(),
+                ->sortable()
+                ->makeBooleanFilter('has_laracon_ticket', 'yes', 'no'), //Boolean filter based on "has_laracon_ticket".
+
 
             Column::make('Laravel user since', 'laravel_since_formatted')
                 ->sortable()
-        ];
+                ->makeInputDatePicker('laravel_since') //Date filter
+            ];
     }
 
     /*
@@ -291,7 +293,7 @@ final class PowerGridDemoTable extends PowerGridComponent
             //Change "background" for row with user ID 4
             Rule::rows()
                 ->when(fn($user) => $user->id === 4)
-                ->setAttribute('class', 'bg-pg-secondary-200 hover:bg-pg-secondary-300'),
+                ->setAttribute('class', 'bg-blue-200 hover:bg-blue-300'),
         ];
     }
 
@@ -307,23 +309,13 @@ final class PowerGridDemoTable extends PowerGridComponent
         throw new \Exception(' Data update is blocked on demo to protect your database!');
     }
 
-    /**
-     * PowerGrid filters.
-     *
-     * @return array<int, Filter>
-     */
-    public function filters(): array
-    {
-        return [
-            Filter::inputText('name')
-                ->operators(['contains']),
-
-            Filter::inputText('email'),
-
-            Filter::boolean('laracon')
-                ->label('Yes', 'No'),
-        ];
-    }
+    /*
+    |--------------------------------------------------------------------------
+    | ❗ Demo Users (Should be removed in a real project)
+    |--------------------------------------------------------------------------
+    | Generate random  users for demo purpose.
+    | Data will NOT be stored in your database.
+    */
 
     /**
      * Generate demo users

@@ -1,7 +1,7 @@
 <div align="center">
 	<p><img src="art/header.jpg" alt="PowerGrid Logo"></p>
     <p align="center">
-        <a href="https://packagist.org/packages/power-components/livewire-powergrid"><img alt="Latest Version" src="https://img.shields.io/static/v1?label=laravel&message=%E2%89%A59.0&color=0078BE&logo=laravel&style=flat-square"></a>
+        <a href="https://packagist.org/packages/power-components/livewire-powergrid"><img alt="Latest Version" src="https://img.shields.io/static/v1?label=laravel&message=%E2%89%A58.0&color=0078BE&logo=laravel&style=flat-square"></a>
         <a href="https://packagist.org/packages/power-components/livewire-powergrid"><img alt="Total Downloads" src="https://img.shields.io/packagist/dt/power-components/livewire-powergrid"></a>
         <a href="https://github.com/Power-Components/livewire-powergrid/actions">
             <img alt="Tests Passing" src="https://github.com/Power-Components/livewire-powergrid/workflows/Powergrid%20Tests/badge.svg" />
@@ -30,17 +30,10 @@ PowerGrid creates modern, powerful and easy to customize Datatables based on Lar
 
 ➔  **Full Stubs**: Table components include feature examples. Just uncomment some code, enter your data, and it works!
 
-<br/>
-
-<p>
-    <img src="https://livewire-powergrid.com/_media/screenshot.png" alt="PowerGrid Screenshot">
-</p>
 
 <br/>
 
 ## 🚀 Instant Demo
-
-### [Online Demo](https://demo.livewire-powergrid.com) (tailwind)
 
 Get a view of what PowerGrid can offer in just 2 commands:
 
@@ -106,8 +99,8 @@ With PowerGrid you get right out of the box:
 
 ## 1. Requirements
 
-- PHP 8.1+
-- [Laravel 9+](https://laravel.com/docs/9.x/installation)
+- PHP 8.0+
+- [Laravel 8.75+](https://laravel.com/docs/9.x/installation)
 - [Livewire 2.10x](https://laravel-livewire.com)
 - [Tailwind 3x](https://tailwindcss.com/docs/guides/laravel) or [Bootstrap 5](https://getbootstrap.com/docs/5.0/getting-started/introduction/)
 
@@ -115,7 +108,7 @@ With PowerGrid you get right out of the box:
 
 ## 2. Install
 
-Please follow the steps indicated in our [Documentation - Install](https://livewire-powergrid.com/get-started/install.html) page.
+Please follow the steps indicated in our [Documentation - Install](https://livewire-powergrid.com/#/get-started/install) page.
 
 <br/>
 
@@ -139,10 +132,14 @@ Please read the [Contributing Guide](https://github.com/Power-Components/livewir
 
 ## 5. Credits
 
-Created by: [Luan Freitas](https://twitter.com/luanfreitasdev) and [@DanSysAnalyst](https://github.com/dansysanalyst)
+Created by: [Luan Freitas](https://twitter.com/luanfreitasdev)
 
 - [Contributors](../../contributors)
 - Logo & artwork by [Caneco](https://twitter.com/caneco)
+
+<br/>
+
+<sup><b>Notice of Non-Affiliation and Disclaimer:</b> Livewire PowerGrid is not affiliated, associated, endorsed by, or in any way officially connected with the Laravel Livewire - copyright by Caleb Porzio.</sup>
 
 <hr>
 
@@ -152,11 +149,10 @@ Created by: [Luan Freitas](https://twitter.com/luanfreitasdev) and [@DanSysAnaly
   <a href="http://devsquad.com" target="_blank">
     <img src="https://livewire-powergrid.com/_media/logos/devsquad.png" alt="DevSquad" height="undefined">
   </a>
+
 </p>
-
 <p></p>
 <p></p>
-
 <p>Supported by:</p>
 <p>
   <!-- PHPStorm -->
@@ -172,3 +168,4 @@ Created by: [Luan Freitas](https://twitter.com/luanfreitasdev) and [@DanSysAnaly
 <hr>
 
 <sup><b>Notice of Non-Affiliation and Disclaimer:</b> Livewire PowerGrid is not affiliated, associated, endorsed by, or in any way officially connected with the Laravel Livewire - copyright by Caleb Porzio.</sup>
+

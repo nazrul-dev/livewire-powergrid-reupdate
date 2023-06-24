@@ -2,7 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
-use Illuminate\Support\Collection;
+use Illuminate\Support\{Collection, Str};
 
 final class Column
 {
@@ -15,10 +15,6 @@ final class Column
     public string $headerStyle = '';
 
     public string $bodyClass = '';
-
-    public string $contentClassField = '';
-
-    public array $contentClasses = [];
 
     public string $bodyStyle = '';
 
@@ -65,7 +61,7 @@ final class Column
         'footer' => false,
     ];
 
-    public Collection $filters;
+    public array $inputs = [];
 
     /**
      *
@@ -78,8 +74,6 @@ final class Column
      * @var array<string, bool|string> $clickToCopy
      */
     public array $clickToCopy = [];
-
-    public bool $index = false;
 
     /**
      * Adds a new Column
@@ -113,17 +107,6 @@ final class Column
     }
 
     /**
-     * Adds index ($loop->index)
-     *
-     */
-    public function index(): Column
-    {
-        $this->index = true;
-
-        return $this;
-    }
-
-    /**
      * Adds placeholder
      *
      */
@@ -151,6 +134,8 @@ final class Column
     */
     public function searchableRaw(string $sql): Column
     {
+        $this->searchable();
+
         $this->searchableRaw = $sql;
 
         return $this;
@@ -263,8 +248,9 @@ final class Column
     public function field(string $field, string $dataField = ''): Column
     {
         $this->field = $field;
-
-        $this->dataField = filled($dataField) ? $dataField : $field;
+        if (filled($dataField)) {
+            $this->dataField = $dataField;
+        }
 
         return $this;
     }
@@ -313,6 +299,87 @@ final class Column
     }
 
     /**
+     * Input Select Filter
+     *
+     */
+    public function makeInputSelect(
+        Collection $datasource,
+        string $displayField,
+        string $dataField = null,
+        array $settings = []
+    ): Column {
+        $this->editable                         = [];
+        $this->inputs['select']['data_source']  = $datasource;
+        $this->inputs['select']['displayField'] = $displayField;
+        $this->inputs['select']['dataField']    = $dataField         ?? $displayField;
+        $this->inputs['select']['class']        = $settings['class'] ?? '';
+
+        return $this;
+    }
+
+    /**
+     * Input Multi-Select Filter
+     *
+     */
+    public function makeInputMultiSelect(
+        Collection $datasource,
+        string $optionText,
+        string $dataField = null,
+        string $optionValue = 'id'
+    ): Column {
+        $this->editable                              = [];
+        $this->inputs['multi_select']['data_source'] = $datasource;
+        $this->inputs['multi_select']['text']        = $optionText ?: $optionValue;
+        $this->inputs['multi_select']['value']       = $optionValue;
+        $this->inputs['multi_select']['dataField']   = $dataField;
+
+        return $this;
+    }
+
+    /**
+     * Filter Datepicker
+     *
+    */
+    public function makeInputDatePicker(
+        string $dataField = '',
+        array $settings = [],
+        string $classAttr = ''
+    ): Column {
+        $this->inputs['date_picker']['enabled'] = true;
+        $this->inputs['date_picker']['class']   = $classAttr;
+        $this->inputs['date_picker']['config']  = $settings;
+        if (filled($dataField)) {
+            $this->dataField = $dataField;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Filter Enum - ^php8.1
+     *
+     */
+    public function makeInputEnumSelect(array $enumCases, string $dataField = null, array $settings = []): Column
+    {
+        $displayField = 'value';
+
+        $dataSource = collect($enumCases)->map(function ($case) use (&$displayField) {
+            $option = (array) $case;
+
+            if (method_exists($case, 'labelPowergridFilter')) {
+                $option['name'] = $case->labelPowergridFilter();
+                $displayField   = 'name';
+            }
+
+            return $option;
+        });
+
+        $dataField ??= Str::snake(class_basename($enumCases[0]));
+
+        return $this->makeInputSelect($dataSource, $displayField, $dataField, $settings);
+    }
+
+    /**
      * Adds Edit on click to a column
      *
      */
@@ -349,6 +416,36 @@ final class Column
         return $this;
     }
 
+    /**
+     * Add Input Number Range
+     */
+    public function makeInputRange(
+        string $dataField = '',
+    ): Column {
+        $this->inputs['number']['enabled']   = true;
+        if (filled($dataField)) {
+            $this->dataField = $dataField;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Add Input Text
+     */
+    public function makeInputText(string $dataField = ''): Column
+    {
+        $this->inputs['input_text']['enabled'] = true;
+        if (filled($dataField)) {
+            $this->dataField = $dataField;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
     public function clickToCopy(bool $hasPermission, string $label = 'copy'): Column
     {
         $this->clickToCopy = [
@@ -359,16 +456,22 @@ final class Column
         return $this;
     }
 
-    public function contentClassField(string $dataField = ''): Column
-    {
-        $this->contentClassField = $dataField;
-
-        return $this;
-    }
-
-    public function contentClasses(array $array): Column
-    {
-        $this->contentClasses = $array;
+    /**
+     * Add Boolean Filter
+     */
+    public function makeBooleanFilter(
+        string $dataField = '',
+        string $trueLabel = 'Yes',
+        string $falseLabel = 'No',
+        array $settings = []
+    ): Column {
+        $this->inputs['boolean']['enabled']     = true;
+        $this->inputs['boolean']['true_label']  = $trueLabel;
+        $this->inputs['boolean']['false_label'] = $falseLabel;
+        $this->inputs['boolean']['class']       = $settings['class'] ?? '';
+        if (filled($dataField)) {
+            $this->dataField = $dataField;
+        }
 
         return $this;
     }

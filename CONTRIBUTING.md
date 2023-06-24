@@ -53,7 +53,7 @@ composer fix
 Run tests and static analysis:
 
 ```Shell
-composer verify
+composer check
 ```
 
 <br/>

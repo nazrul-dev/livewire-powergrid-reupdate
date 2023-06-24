@@ -1,40 +1,25 @@
 @props([
     'theme' => '',
     'column' => null,
+    'class' => '',
     'inline' => null,
-    'filter' => null,
+    'booleanFilter' => null,
 ])
-@php
-    unset($filter['className']);
-    extract($filter);
-    
-    $defaultAttributes = \PowerComponents\LivewirePowerGrid\Filters\FilterBoolean::getWireAttributes($field, $title);
-    
-    $selectClasses = Arr::toCssClasses([$theme->selectClass, data_get($column, 'headerClass'), 'power_grid']);
-    
-    $params = array_merge([...data_get($filter, 'attributes'), ...$defaultAttributes], $filter);
-@endphp
-
-@if ($params['component'])
-    @unset($params['attributes'])
-
-    <x-dynamic-component
-        :component="$params['component']"
-        :attributes="new \Illuminate\View\ComponentAttributeBag($params)"
-    />
-@else
-    <div
-        class="{{ $theme->baseClass }}"
-        style="{{ $theme->baseStyle }}"
-    >
-        <select
-            style="{{ data_get($column, 'headerStyle') }}"
-            class="{{ $selectClasses }}"
-            {{ $defaultAttributes['selectAttributes'] }}
-        >
-            <option value="all">{{ trans('livewire-powergrid::datatable.boolean_filter.all') }}</option>
-            <option value="true">{{ $trueLabel }}</option>
-            <option value="false">{{ $falseLabel }}</option>
-        </select>
-    </div>
-@endif
+<div>
+    @if(filled($booleanFilter))
+        <div @class([
+            $theme->baseClass,
+            $booleanFilter['class'] => $booleanFilter['class'] != ''
+        ]) style="{{ $theme->baseStyle }}">
+            <select id="input_boolean_filter_{{ data_get($booleanFilter, 'field') }}"
+                    style="{{ data_get($column, 'headerStyle') }}"
+                    class="power_grid {{ $theme->selectClass }} {{ $class }} {{ data_get($column, 'headerClass') }}"
+                    wire:input.lazy="filterBoolean('{{ $booleanFilter['dataField'] }}', $event.target.value, '{{ $booleanFilter['label'] }}')"
+                    wire:model="filters.boolean.{{ $booleanFilter['dataField'] }}">
+                <option value="all">{{ trans('livewire-powergrid::datatable.boolean_filter.all') }}</option>
+                <option value="true">{{ data_get($booleanFilter, 'true_label') }}</option>
+                <option value="false">{{ data_get($booleanFilter, 'false_label') }}</option>
+            </select>
+        </div>
+    @endif
+</div>

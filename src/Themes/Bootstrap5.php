@@ -2,8 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Themes;
 
-use PowerComponents\LivewirePowerGrid\Themes\Components\{
-    Actions,
+use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions,
     Checkbox,
     ClickToCopy,
     Cols,
@@ -15,10 +14,8 @@ use PowerComponents\LivewirePowerGrid\Themes\Components\{
     FilterNumber,
     FilterSelect,
     Footer,
-    SearchBox,
     Table,
-    Toggleable,
-};
+    Toggleable};
 
 class Bootstrap5 extends ThemeBase
 {
@@ -29,12 +26,10 @@ class Bootstrap5 extends ThemeBase
         return Theme::table('table table-bordered table-hover table-striped table-checkable table-highlight-head mb-2')
             ->div('table-responsive col-md-12', 'margin: 10px 0 10px;')
             ->thead('')
-            ->thAction('')
-            ->tdAction('')
             ->tr('')
-            ->th('', 'white-space: nowrap;min-width: 50px;font-size: 0.75rem;color: #6b6a6a;padding-top: 8px;padding-bottom: 8px;')
+            ->th('', 'white-space: nowrap;min-width: 50px;padding-left: 15px;font-size: 0.75rem;color: #6b6a6a;padding-top: 8px;padding-bottom: 8px;')
             ->tbody('')
-            ->tdBodyEmpty('', 'vertical-align: middle; line-height: normal;')
+            ->tdBody('', 'vertical-align: middle; line-height: normal;')
             ->tdBodyTotalColumns('', 'font-size: 0.875rem; line-height: 1.25rem; --tw-text-opacity: 1; color: rgb(76 79 82 / var(--tw-text-opacity)); padding-left: 0.75rem; padding-right: 0.75rem; padding-top: 0.5rem; padding-bottom: 0.5rem;')
             ->tdBody('', 'vertical-align: middle; line-height: normal;white-space: nowrap;');
     }
@@ -132,13 +127,5 @@ class Bootstrap5 extends ThemeBase
             ->view($this->root() . '.filters.input-text')
             ->select('form-control mb-1 shadow-none form-select')
             ->input('form-control shadow-none');
-    }
-
-    public function searchBox(): SearchBox
-    {
-        return Theme::searchBox()
-            ->input('col-12 col-sm-8 form-control')
-            ->iconSearch('bi bi-search')
-            ->iconClose('');
     }
 }

@@ -2,8 +2,6 @@
 
 use function Pest\Livewire\livewire;
 
-use PowerComponents\LivewirePowerGrid\Tests\DishesSearchableRawTable;
-
 it('searches data using whereRaw on sqlite', function (string $component, object $params) {
     livewire($component, ['database' => 'sqlite'])
         ->call($params->theme)
@@ -18,7 +16,7 @@ it('searches data using whereRaw on sqlite', function (string $component, object
         ->set('search', '06/2026')
         ->assertSee('Francesinha')
         ->assertDontSee('Polpetone Filé Mignon');
-})->with('searchable_raw_themes')->requiresSQLite();
+})->with('searchable-raw')->requiresSQLite();
 
 it('searches data using whereRaw on mysql', function (string $component, object $params) {
     livewire($component, ['database' => 'mysql'])
@@ -35,7 +33,7 @@ it('searches data using whereRaw on mysql', function (string $component, object 
         ->set('search', '06/2026')
         ->assertSee('Francesinha')
         ->assertDontSee('Polpetone Filé Mignon');
-})->with('searchable_raw_themes')->requiresMySQL();
+})->with('searchable-raw')->requiresMySQL();
 
 it('searches data using whereRaw on pgsql', function (string $component, object $params) {
     livewire($component, ['database' => 'pgsql'])
@@ -51,9 +49,4 @@ it('searches data using whereRaw on pgsql', function (string $component, object 
         ->set('search', '06/2026')
         ->assertSee('Francesinha')
         ->assertDontSee('Polpetone Filé Mignon');
-})->with('searchable_raw_themes')->requiresPostgreSQL();
-
-dataset('searchable_raw_themes', [
-    'tailwind'  => [DishesSearchableRawTable::class, (object) ['theme' => 'tailwind']],
-    'bootstrap' => [DishesSearchableRawTable::class, (object) ['theme' => 'bootstrap']],
-]);
+})->with('searchable-raw')->requiresPostgreSQL();

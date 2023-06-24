@@ -40,25 +40,9 @@ class Table
 
     public string $tdBodyStyle = '';
 
-    public string $tdFiltersClass = '';
-
-    public string $tdFiltersStyle = '';
-
     public string $tdBodyClassTotalColumns;
 
     public string $tdBodyStyleTotalColumns;
-
-    public string $tdBodyEmptyClass = '';
-
-    public string $tdBodyEmptyStyle = '';
-
-    public string $thActionClass = '';
-
-    public string $thActionStyle = '';
-
-    public string $tdActionClass = '';
-
-    public string $tdActionStyle = '';
 
     /**
      * Table constructor.
@@ -103,14 +87,6 @@ class Table
         return $this;
     }
 
-    public function tdFilters(string $attrClass = '', string $attrStyle = ''): Table
-    {
-        $this->tdFiltersClass = $attrClass;
-        $this->tdFiltersStyle = $attrStyle;
-
-        return $this;
-    }
-
     public function th(string $attrClass, string $attrStyle = ''): Table
     {
         $this->thClass = $attrClass;
@@ -147,30 +123,6 @@ class Table
     {
         $this->tdBodyClassTotalColumns = $attrClass;
         $this->tdBodyStyleTotalColumns = $attrStyle;
-
-        return $this;
-    }
-
-    public function tdBodyEmpty(string $attrClass, string $attrStyle = ''): Table
-    {
-        $this->tdBodyEmptyClass = $attrClass;
-        $this->tdBodyEmptyStyle = $attrStyle;
-
-        return $this;
-    }
-
-    public function thAction(string $attrClass, string $attrStyle = ''): Table
-    {
-        $this->thActionClass = $attrClass;
-        $this->thActionStyle = $attrStyle;
-
-        return $this;
-    }
-
-    public function tdAction(string $attrClass, string $attrStyle = ''): Table
-    {
-        $this->tdActionClass = $attrClass;
-        $this->tdActionStyle = $attrStyle;
 
         return $this;
     }

@@ -4,26 +4,21 @@ namespace PowerComponents\LivewirePowerGrid\Tests;
 
 use Illuminate\Support\{Carbon, Collection};
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
-use PowerComponents\LivewirePowerGrid\{
-    Button,
+use PowerComponents\LivewirePowerGrid\{Button,
     Column,
     Exportable,
-    Filters\Filter,
     Footer,
     Header,
     PowerGrid,
-    PowerGridColumns,
     PowerGridComponent,
-    Rules\Rule
-};
+    PowerGridEloquent,
+    Rules\Rule};
 
 class DishesCollectionTable extends PowerGridComponent
 {
     use ActionButton;
 
     public array $eventId = [];
-
-    public array $testFilters = [];
 
     protected function getListeners()
     {
@@ -105,9 +100,16 @@ class DishesCollectionTable extends PowerGridComponent
         ];
     }
 
-    public function addColumns(): PowerGridColumns
+    public function inputRangeConfig(): array
     {
-        return PowerGrid::columns()
+        return [
+            'price' => ['thousands' => '.', 'decimal' => ''],
+        ];
+    }
+
+    public function addColumns(): PowerGridEloquent
+    {
+        return PowerGrid::eloquent()
             ->addColumn('id')
             ->addColumn('name')
             ->addColumn('chef_name')
@@ -134,27 +136,32 @@ class DishesCollectionTable extends PowerGridComponent
                 ->title(__('Name'))
                 ->field('name')
                 ->searchable()
+                ->makeInputText('name')
                 ->sortable(),
 
             Column::add()
                 ->title(__('Chef'))
                 ->field('chef_name')
                 ->searchable()
+                ->makeInputText('chef_name')
                 ->sortable(),
 
             Column::add()
                 ->title(__('Price'))
                 ->field('price')
-                ->sortable(),
+                ->sortable()
+                ->makeInputRange('price'),
 
             Column::add()
                 ->title(__('In Stock'))
                 ->toggleable(true, 'sim', 'não')
+                ->makeBooleanFilter('in_stock', 'sim', 'não')
                 ->field('in_stock'),
 
             Column::add()
                 ->title(__('Created At'))
-                ->field('created_at_formatted'),
+                ->field('created_at_formatted')
+                ->makeInputDatePicker('created_at'),
         ];
     }
 
@@ -165,57 +172,7 @@ class DishesCollectionTable extends PowerGridComponent
                 ->caption('<div id="edit">Edit</div>')
                 ->class('text-center')
                 ->openModal('edit-stock', ['dishId' => 'id']),
-
-            Button::add('edit-stock-for-rules')
-                ->caption('<div id="edit">Edit for Rules</div>')
-                ->class('text-center')
-                ->openModal('edit-stock-for-rules', ['dishId' => 'id']),
-
-            Button::add('destroy')
-                ->caption(__('Delete'))
-                ->class('text-center')
-                ->emit('deletedEvent', ['dishId' => 'id'])
-                ->method('delete'),
         ];
-    }
-
-    public function actionRules(): array
-    {
-        return [
-            Rule::button('edit-stock-for-rules')
-                ->when(fn ($dish) => $dish->id == 2)
-                ->hide(),
-
-            Rule::button('edit-stock-for-rules')
-                ->when(fn ($dish) => $dish->id == 4)
-                ->caption('cation edit for id 4'),
-
-            Rule::button('edit-stock-for-rules')
-                ->when(fn ($dish) => (bool) $dish->in_stock === false && $dish->id !== 8)
-                ->redirect(fn ($dish) => 'https://www.dish.test/sorry-out-of-stock?dish=' . $dish->id),
-
-            // Set a row red background for when dish is out of stock
-            Rule::rows()
-                ->when(fn ($dish) => (bool) $dish->in_stock === false)
-                ->setAttribute('class', 'bg-red-100 text-red-800'),
-
-            Rule::rows()
-                ->when(fn ($dish) => $dish->id == 3)
-                ->setAttribute('class', 'bg-pg-secondary-100'),
-
-            Rule::button('edit-stock-for-rules')
-                ->when(fn ($dish) => $dish->id == 5)
-                ->emit('toggleEvent', ['dishId' => 'id']),
-
-            Rule::button('edit-stock-for-rules')
-                ->when(fn ($dish) => $dish->id == 9)
-                ->disable(),
-        ];
-    }
-
-    public function filters(): array
-    {
-        return $this->testFilters;
     }
 
     public function bootstrap()

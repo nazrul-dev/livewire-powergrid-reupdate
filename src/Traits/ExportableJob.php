@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\{Str, Stringable};
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
-/** @codeCoverageIgnore */
 trait ExportableJob
 {
     private string $fileName;
@@ -15,7 +14,7 @@ trait ExportableJob
 
     private array $columns;
 
-    private string $exportableClass;
+    private string $type;
 
     private int $offset;
 
@@ -31,6 +30,8 @@ trait ExportableJob
     private function transform(Collection $collection): Collection
     {
         return $collection->transform(function ($row) {
+            $row = (object) $row;
+
             $columns = $this->componentTable->addColumns()->columns;
 
             foreach ($columns as $key => $column) {

@@ -9,7 +9,7 @@ use PowerComponents\LivewirePowerGrid\Footer;
 use PowerComponents\LivewirePowerGrid\Header;
 use PowerComponents\LivewirePowerGrid\Exportable;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
-use PowerComponents\LivewirePowerGrid\PowerGridColumns;
+use PowerComponents\LivewirePowerGrid\PowerGridEloquent;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 
@@ -65,9 +65,9 @@ final class {{ componentName }} extends PowerGridComponent
     | You can pass a closure to transform/modify the data.
     |
     */
-    public function addColumns(): PowerGridColumns
+    public function addColumns(): PowerGridEloquent
     {
-        return PowerGrid::columns()
+        return PowerGrid::eloquent()
             ->addColumn('id')
             ->addColumn('name')
             ->addColumn('price')
@@ -99,12 +99,15 @@ final class {{ componentName }} extends PowerGridComponent
 
             Column::make('Name', 'name')
                 ->searchable()
+                ->makeInputText('name')
                 ->sortable(),
 
             Column::make('Price', 'price')
-                ->sortable(),
+                ->sortable()
+                ->makeInputRange('price', '.', ''),
 
-            Column::make('Created', 'created_at_formatted'),
+            Column::make('Created', 'created_at_formatted')
+                ->makeInputDatePicker('created_at'),
         ];
     }
 }

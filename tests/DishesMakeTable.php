@@ -7,16 +7,14 @@ use Illuminate\Database\Eloquent\Builder;
 use NumberFormatter;
 use PowerComponents\LivewirePowerGrid\Tests\Models\{Category, Dish};
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
-use PowerComponents\LivewirePowerGrid\{
-    Button,
+use PowerComponents\LivewirePowerGrid\{Button,
     Column,
     Exportable,
     Footer,
     Header,
     PowerGrid,
-    PowerGridColumns,
-    PowerGridComponent
-};
+    PowerGridComponent,
+    PowerGridEloquent};
 
 class DishesMakeTable extends PowerGridComponent
 {
@@ -77,11 +75,18 @@ class DishesMakeTable extends PowerGridComponent
         ];
     }
 
-    public function addColumns(): PowerGridColumns
+    public function inputRangeConfig(): array
+    {
+        return [
+            'price' => ['thousands' => '.', 'decimal' => ','],
+        ];
+    }
+
+    public function addColumns(): PowerGridEloquent
     {
         $fmt = new NumberFormatter('ca_ES', NumberFormatter::CURRENCY);
 
-        return PowerGrid::columns()
+        return PowerGrid::eloquent()
             ->addColumn('id')
             ->addColumn('name')
             ->addColumn('storage_room')
@@ -134,36 +139,49 @@ class DishesMakeTable extends PowerGridComponent
                 ->searchable()
                 ->editOnClick()
                 ->clickToCopy(true)
+                ->makeInputText('name')
                 ->placeholder('Prato placeholder')
                 ->sortable(),
 
             Column::make('Serving at', 'serving_at')
-                ->sortable(),
+                ->sortable()
+                ->makeInputSelect(Dish::servedAt(), 'serving_at', 'serving_at', ['live-search' => true]),
 
             Column::make('Chef', 'chef_name')
                 ->searchable()
                 ->editOnClick()
                 ->clickToCopy(true)
+                ->makeInputText('chef_name')
                 ->placeholder('Chef placeholder')
                 ->sortable(),
 
-            Column::make('Category', 'category_name')
-                ->placeholder('Category'),
+            Column::make('Categoria', 'category_name')
+                ->placeholder('Categoria placeholder')
+                ->makeInputSelect(Category::all(), 'name', 'category_id'),
+
+            Column::make('Multiple', 'category_name')
+                ->placeholder('Categoria')
+                ->makeInputMultiSelect(Category::query()->take(5)->get(), 'name', 'category_id'),
 
             Column::make('Preço', 'price_BRL')
-                ->editOnClick(true, 'price'),
+                ->editOnClick(true, 'price')
+                ->makeInputRange('price'),
 
             Column::make('Preço de Venda', 'sales_price_BRL'),
 
             Column::make('Calorias', 'calories')
+                ->makeInputRange('calories')
                 ->sortable(),
 
             Column::make('Em Estoque', 'in_stock')
-                ->toggleable(true, 'sim', 'não'),
+                ->toggleable(true, 'sim', 'não')
+                ->makeBooleanFilter('in_stock', 'sim', 'não'),
 
-            Column::make('Data de produção', 'produced_at_formatted'),
+            Column::make('Data de produção', 'produced_at_formatted')
+                ->makeInputDatePicker('produced_at'),
 
             Column::make('Data', 'produced_at')
+                ->makeInputDatePicker('produced_at')
                 ->sortable(),
         ];
     }

@@ -6,14 +6,12 @@ use {{ modelName }};
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Rules\{Rule, RuleActions};
-use PowerComponents\LivewirePowerGrid\Traits\{ActionButton, WithExport};
-use PowerComponents\LivewirePowerGrid\Filters\Filter;
-use PowerComponents\LivewirePowerGrid\{Button, Column, Exportable, Footer, Header, PowerGrid, PowerGridComponent, PowerGridColumns};
+use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
+use PowerComponents\LivewirePowerGrid\{Button, Column, Exportable, Footer, Header, PowerGrid, PowerGridComponent, PowerGridEloquent};
 
 final class {{ componentName }} extends PowerGridComponent
 {
     use ActionButton;
-    use WithExport;
 
     /*
     |--------------------------------------------------------------------------
@@ -46,10 +44,10 @@ final class {{ componentName }} extends PowerGridComponent
     */
 
     /**
-     * PowerGrid datasource.
-     *
-     * @return Builder<\{{ modelName }}>
-     */
+    * PowerGrid datasource.
+    *
+    * @return Builder<\{{ modelName }}>
+    */
     public function datasource(): Builder
     {
         return {{ modelLastName }}::query();
@@ -84,9 +82,9 @@ final class {{ componentName }} extends PowerGridComponent
     |    the database using the `e()` Laravel Helper function.
     |
     */
-    public function addColumns(): PowerGridColumns
+    public function addColumns(): PowerGridEloquent
     {
-        return PowerGrid::columns(){{ datasource }};
+        return PowerGrid::eloquent(){{ datasource }};
     }
 
     /*
@@ -99,23 +97,13 @@ final class {{ componentName }} extends PowerGridComponent
     */
 
      /**
-      * PowerGrid Columns.
-      *
-      * @return array<int, Column>
-      */
+     * PowerGrid Columns.
+     *
+     * @return array<int, Column>
+     */
     public function columns(): array
     {
-        return {{ columns }}
-    }
-
-    /**
-     * PowerGrid Filters.
-     *
-     * @return array<int, Filter>
-     */
-    public function filters(): array
-    {
-        return {{ filters }}
+        return {{ columns }};
     }
 
     /*
@@ -126,7 +114,7 @@ final class {{ componentName }} extends PowerGridComponent
     |
     */
 
-    /**
+     /**
      * PowerGrid {{ modelLastName }} Action Buttons.
      *
      * @return array<int, Button>
@@ -138,15 +126,11 @@ final class {{ componentName }} extends PowerGridComponent
        return [
            Button::make('edit', 'Edit')
                ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2.5 m-1 rounded text-sm')
-               ->route('{{ modelKebabCase }}.edit', function(\{{ modelName }} $model) {
-                    return $model->id;
-               }),
+               ->route('{{ modelKebabCase }}.edit', ['{{ modelKebabCase }}' => 'id']),
 
            Button::make('destroy', 'Delete')
                ->class('bg-red-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
-               ->route('{{ modelKebabCase }}.destroy', function(\{{ modelName }} $model) {
-                    return $model->id;
-               })
+               ->route('{{ modelKebabCase }}.destroy', ['{{ modelKebabCase }}' => 'id'])
                ->method('delete')
         ];
     }
@@ -160,7 +144,7 @@ final class {{ componentName }} extends PowerGridComponent
     |
     */
 
-    /**
+     /**
      * PowerGrid {{ modelLastName }} Action Rules.
      *
      * @return array<int, RuleActions>

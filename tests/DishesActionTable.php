@@ -2,6 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Tests;
 
+use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 
 class DishesActionTable extends DishTableBase
@@ -11,8 +12,6 @@ class DishesActionTable extends DishTableBase
     public array $eventId = [];
 
     public bool $join = false;
-
-    public array $actionsTest = [];
 
     protected function getListeners(): array
     {
@@ -36,6 +35,33 @@ class DishesActionTable extends DishTableBase
 
     public function actions(): array
     {
-        return $this->actionsTest;
+        return [
+            Button::add('openModal')
+                ->id('open-modal')
+                ->caption('openModal')
+                ->class('text-center')
+                ->openModal('edit-stock', ['dishId' => 'id']),
+
+            Button::add('emit')
+                ->id('emit')
+                ->caption(__('delete'))
+                ->class('text-center')
+                ->emit('deletedEvent', ['dishId' => 'id']),
+
+            Button::add('emitTo')
+                ->id('emit-to')
+                ->caption(__('EmitTo'))
+                ->class('text-center')
+                ->emitTo('dishes-table', 'deletedEvent', ['dishId' => 'id']),
+
+            Button::add('dispatch')
+                ->id('dispatch')
+                ->caption(__('Dispatch'))
+                ->class('text-center')
+                ->dispatch('browserEvent', ['dishId' => 'id']),
+
+            Button::add('bladeComponent')
+            ->bladeComponent('livewire-powergrid::icons.arrow', ['dish-id' => 'id']),
+        ];
     }
 }

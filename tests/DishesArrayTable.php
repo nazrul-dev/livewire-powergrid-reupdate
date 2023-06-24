@@ -4,24 +4,20 @@ namespace PowerComponents\LivewirePowerGrid\Tests;
 
 use Illuminate\Support\{Carbon};
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
-use PowerComponents\LivewirePowerGrid\{
-    Button,
+use PowerComponents\LivewirePowerGrid\{Button,
     Column,
     Exportable,
     Footer,
     Header,
     PowerGrid,
-    PowerGridColumns,
-    PowerGridComponent
-};
+    PowerGridComponent,
+    PowerGridEloquent};
 
 class DishesArrayTable extends PowerGridComponent
 {
     use ActionButton;
 
     public array $eventId = [];
-
-    public array $testFilters = [];
 
     protected function getListeners()
     {
@@ -103,9 +99,16 @@ class DishesArrayTable extends PowerGridComponent
         ];
     }
 
-    public function addColumns(): PowerGridColumns
+    public function inputRangeConfig(): array
     {
-        return PowerGrid::columns()
+        return [
+            'price' => ['thousands' => '.', 'decimal' => ''],
+        ];
+    }
+
+    public function addColumns(): PowerGridEloquent
+    {
+        return PowerGrid::eloquent()
             ->addColumn('id')
             ->addColumn('name')
             ->addColumn('chef_name')
@@ -132,27 +135,32 @@ class DishesArrayTable extends PowerGridComponent
                 ->title(__('Name'))
                 ->field('name')
                 ->searchable()
+                ->makeInputText('name')
                 ->sortable(),
 
             Column::add()
                 ->title(__('Chef'))
                 ->field('chef_name')
                 ->searchable()
+                ->makeInputText('chef_name')
                 ->sortable(),
 
             Column::add()
                 ->title(__('Price'))
                 ->field('price')
-                ->sortable(),
+                ->sortable()
+                ->makeInputRange('price'),
 
             Column::add()
                 ->title(__('In Stock'))
                 ->toggleable(true, 'sim', 'não')
+                ->makeBooleanFilter('in_stock', 'sim', 'não')
                 ->field('in_stock'),
 
             Column::add()
                 ->title(__('Created At'))
-                ->field('created_at_formatted'),
+                ->field('created_at_formatted')
+                ->makeInputDatePicker('created_at'),
         ];
     }
 
@@ -164,11 +172,6 @@ class DishesArrayTable extends PowerGridComponent
                 ->class('text-center')
                 ->openModal('edit-stock', ['dishId' => 'id']),
         ];
-    }
-
-    public function filters(): array
-    {
-        return $this->testFilters;
     }
 
     public function bootstrap()

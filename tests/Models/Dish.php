@@ -13,7 +13,6 @@ use Illuminate\Support\Carbon;
  * @property float $price
  * @property int $calories
  * @property bool $in_stock
- * @property string $additional
  * @property bool $active
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -37,10 +36,5 @@ class Dish extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'category_id', 'id');
-    }
-
-    public function chef(): BelongsTo
-    {
-        return $this->belongsTo(Chef::class, 'chef_id');
     }
 }

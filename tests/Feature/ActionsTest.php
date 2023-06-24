@@ -2,21 +2,10 @@
 
 use function Pest\Livewire\livewire;
 
-use PowerComponents\LivewirePowerGrid\Button;
-
 use PowerComponents\LivewirePowerGrid\Tests\DishesActionTable;
 
 it('properly displays "openModal" on edit button', function (string $component, object $params) {
-    livewire($component, [
-        'join'        => $params->join,
-        'actionsTest' => [
-            Button::add('openModal')
-                ->id('open-modal')
-                ->caption('openModal')
-                ->class('text-center')
-                ->openModal('edit-stock', ['dishId' => 'id']),
-        ],
-    ])
+    livewire($component, ['join' => $params->join])
         ->call($params->theme)
         ->set('setUp.footer.perPage', 6)
         ->assertSee('$emit("openModal", "edit-stock", {"dishId":1})')
@@ -28,16 +17,7 @@ it('properly displays "openModal" on edit button', function (string $component, 
 })->with('action')->group('action');
 
 it('properly displays "$dispatch" on edit button', function (string $component, object $params) {
-    livewire($component, [
-        'join'        => $params->join,
-        'actionsTest' => [
-            Button::add('dispatch')
-                ->id('dispatch')
-                ->caption('Dispatch')
-                ->class('text-center')
-                ->dispatch('browserEvent', ['dishId' => 'id']),
-        ],
-    ])
+    livewire($component, ['join' => $params->join])
         ->call($params->theme)
         ->set('setUp.footer.perPage', 6)
         ->assertSee('$dispatch("browserEvent", {"dishId":1})')
@@ -48,17 +28,8 @@ it('properly displays "$dispatch" on edit button', function (string $component, 
         ->assertDontSee('$dispatch("browserEvent", {"dishId":1})');
 })->with('action')->group('action');
 
-it('properly displays "$emit" on delete button', function (string $component, object $params) {
-    livewire($component, [
-        'join'        => $params->join,
-        'actionsTest' => [
-            Button::add('emit')
-                ->id('emit')
-                ->caption('Delete')
-                ->class('text-center')
-                ->emit('deletedEvent', ['dishId' => 'id']),
-        ],
-    ])
+it('properly displays "deletedEvent" on delete button', function (string $component, object $params) {
+    livewire($component, ['join' => $params->join])
         ->call($params->theme)
         //page 1
         ->set('setUp.footer.perPage', 5)
@@ -77,17 +48,8 @@ it('properly displays "$emit" on delete button', function (string $component, ob
         ->assertPayloadSet('eventId', ['dishId' => 6]);
 })->with('action')->group('action');
 
-it('properly displays "$emitTo" on delete button from emitTo', function (string $component, object $params) {
-    livewire($component, [
-        'join'        => $params->join,
-        'actionsTest' => [
-            Button::add('emitTo')
-                ->id('emit-to')
-                ->caption('EmitTo')
-                ->class('text-center')
-                ->emitTo('dishes-table', 'deletedEvent', ['dishId' => 'id']),
-        ],
-    ])
+it('properly displays "deletedEvent" on delete button from emitTo', function (string $component, object $params) {
+    livewire($component, ['join' => $params->join])
         ->call($params->theme)
         //page 1
         ->set('setUp.footer.perPage', 5)
@@ -107,18 +69,12 @@ it('properly displays "$emitTo" on delete button from emitTo', function (string 
 })->with('action')->group('action');
 
 it('properly displays "bladeComponent" on bladeComponent button', function (string $component, object $params) {
-    livewire($component, [
-        'join'        => $params->join,
-        'actionsTest' => [
-            Button::add('bladeComponent')
-                ->bladeComponent('livewire-powergrid::icons.arrow', ['dish-id' => 'id']),
-        ],
-    ])
+    livewire($component, ['join' => $params->join])
         ->call($params->theme)
         ->set('setUp.footer.perPage', 6)
-        ->assertSeeHtml('<svg', 'dish-id="1"')
-        ->assertSeeHtml('<svg', 'dish-id="2"')
-        ->assertSeeHtml('<path', 'stroke-linecap="round"', 'stroke-linejoin="round"', 'd="M9 5l7 7-7 7"', '/>')
+        ->assertSeeHtml('<svg dish-id="1"')
+        ->assertSeeHtml('<svg dish-id="2"')
+        ->assertSeeHtml('<path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />')
         ->assertDontSeeHtml('<svg dish-id="7"')
         ->call('setPage', 2)
         ->assertDontSeeHtml('<svg dish-id="6"')
@@ -126,16 +82,7 @@ it('properly displays "bladeComponent" on bladeComponent button', function (stri
 })->with('action')->group('action');
 
 it('properly displays "id" on button', function (string $component, object $params) {
-    livewire($component, [
-        'join'        => $params->join,
-        'actionsTest' => [
-            Button::add('openModal')
-                ->id('open-modal')
-                ->caption('openModal')
-                ->class('text-center')
-                ->openModal('edit-stock', ['dishId' => 'id']),
-        ],
-    ])
+    livewire($component, ['join' => $params->join])
         ->call($params->theme)
         ->set('search', 'Pastel de Nata')
         ->assertSeeHtml('id="open-modal-1"')

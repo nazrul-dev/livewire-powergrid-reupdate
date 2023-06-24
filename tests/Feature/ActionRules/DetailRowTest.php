@@ -83,9 +83,9 @@ it('change \'detailRow\' component when dish-id == 1', function (string $compone
             4 => false,
             5 => false,
         ]);
-})->with('detail_row_tailwind_join')->group('actionRules');
+})->with('detailRow')->group('actionRules');
 
-dataset('detail_row_tailwind_join', [
+dataset('detailRow', [
     'tailwind'      => [RulesToggleDetailTable::class, (object) ['theme' => 'tailwind', 'join' => false]],
     'tailwind join' => [RulesToggleDetailTable::class, (object) ['theme' => 'tailwind', 'join' => true]],
 ]);

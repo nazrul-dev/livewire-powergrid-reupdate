@@ -1,4 +1,3 @@
-{{-- blade-formatter-disable --}}
 <tr class="{{ $theme->table->trBodyClass }}" style="{{ $theme->table->trBodyStyle }}">
     @if(data_get($setUp, 'detail.showCollapseIcon'))
         <td class="{{ $theme->table->tdBodyClass }}" style="{{ $theme->table->tdBodyStyle }}"></td>
@@ -46,4 +45,3 @@
         </th>
     @endif
 </tr>
-{{-- blade-formatter-enable --}}

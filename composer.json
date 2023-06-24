@@ -10,32 +10,25 @@
             "name": "Luan Freitas",
             "email": "luanfreitasgoncalves@gmail.com",
             "role": "Developer"
-        },
-        {
-            "name": "DanSysAnalyst",
-            "email": "daniel@sysanalyst.eu",
-            "role": "Developer"
         }
     ],
     "require": {
-        "php": "^8.1",
-        "livewire/livewire": "^2.12.3",
-        "doctrine/dbal": "^3.6.2|2.12.1",
-        "illuminate/support": "^9.0|^10.0"
+        "php": "^8.0",
+        "livewire/livewire": "^2.10",
+        "doctrine/dbal": "^3.1|2.12.1",
+        "openspout/openspout": "^4.6",
+        "illuminate/support": "^8.18|^9.0|^10.0"
     },
     "require-dev": {
-        "pestphp/pest": "^2.6.1",
-        "orchestra/testbench": "^7.0 | ^8.5.3",
-        "composer/composer": "^2.5.5",
-        "pestphp/pest-plugin-faker": "^2.0",
-        "pestphp/pest-plugin-livewire": "^2.0",
-        "laravel/pint": "^1.10",
-        "nunomaduro/larastan": "^2.6.0",
-        "laradumps/laradumps": "^1.12.1",
-        "spaze/phpstan-disallowed-calls": "^2.14.2"
-    },
-    "suggest": {
-        "openspout/openspout": "Required to export XLS and CSV"
+        "phpunit/phpunit": "^9.5",
+        "pestphp/pest": "^1.21",
+        "orchestra/testbench": "^6.17 | ^7.0 | ^8.0",
+        "composer/composer": "^2.1",
+        "pestphp/pest-plugin-faker": "^1.0",
+        "pestphp/pest-plugin-livewire": "^1.0",
+        "friendsofphp/php-cs-fixer": "^3.13.1",
+        "nunomaduro/larastan": "^1.0 | ^2.4",
+        "laradumps/laradumps": "^1.9"
     },
     "autoload": {
         "psr-4": {
@@ -58,29 +51,22 @@
         }
     },
     "scripts": {
-        "pint:fix": "./vendor/bin/pint",
+        "cs-fixer": "./vendor/bin/php-cs-fixer fix --verbose --dry-run --using-cache=no --stop-on-violation",
+        "fix": "./vendor/bin/php-cs-fixer fix",
         "test": "@test:sqlite",
-        "test:pint": "./vendor/bin/pint --test",
-        "test:sqlite": [
-            "./vendor/bin/pest --compact"
-        ],
-        "test:mysql":  [
-            "./vendor/bin/pest --compact --configuration phpunit.mysql.xml"
-        ],
-        "test:pgsql": [
-            "./vendor/bin/pest --compact --configuration phpunit.pgsql.xml"
-        ],
-        "test:sqlsrv": [
-            "./vendor/bin/pest --configuration phpunit.sqlsrv.xml"
-        ],
-        "test:types": "./vendor/bin/phpstan analyse --ansi --memory-limit=-1 --xdebug",
+        "test:sqlite": "./vendor/bin/pest --configuration phpunit.sqlite.xml",
+        "test:mysql":  "./vendor/bin/pest --configuration phpunit.mysql.xml",
+        "test:pgsql":  "./vendor/bin/pest --configuration phpunit.pgsql.xml",
+        "test:sqlsrv":  "./vendor/bin/pest --configuration phpunit.sqlsrv.xml",
+        "test:types": "./vendor/bin/phpstan analyse --ansi --memory-limit=-1",
         "test:dbs": [
             "@test:sqlite",
             "@test:mysql",
-            "@test:pgsql"
+            "@test:pgsql",
+            "@test:sqlsrv"
         ],
-        "verify": [
-            "@test:pint",
+        "check": [
+            "@cs-fixer",
             "@test:types",
             "@test"
         ]

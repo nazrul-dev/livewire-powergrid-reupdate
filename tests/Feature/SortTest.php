@@ -4,8 +4,6 @@ use function Pest\Livewire\livewire;
 
 use PowerComponents\LivewirePowerGrid\Tests\Actions\TestDatabase;
 
-use PowerComponents\LivewirePowerGrid\Tests\{DishesTable, DishesTableWithJoin};
-
 beforeEach(
     function () {
         TestDatabase::seed(dishesForSorting());
@@ -41,7 +39,7 @@ it('properly sorts ASC/DESC with: date', function (string $component, object $pa
         ->assertSeeHtml('Dish H')
         ->assertDontSeeHtml('Dish I')
         ->assertDontSeeHtml('Dish J');
-})->with('sort_join');
+})->with('themes');
 
 it('properly sorts ASC/DESC with: int', function (string $component, object $params) {
     livewire($component)
@@ -58,7 +56,7 @@ it('properly sorts ASC/DESC with: int', function (string $component, object $par
         ->assertSeeHtml('Dish A')
         ->assertSeeHtml('Dish B')
         ->assertSeeHtml('Dish C');
-})->with('sort_join');
+})->with('themes');
 
 it('properly sorts ASC/DESC with: string', function (string $component, object $params) {
     livewire($component)
@@ -75,7 +73,7 @@ it('properly sorts ASC/DESC with: string', function (string $component, object $
         ->assertSeeHtml('Dish A')
         ->assertSeeHtml('Dish B')
         ->assertDontSeeHtml('Zebra Dish H');
-})->with('sort_join');
+})->with('themes');
 
 it('properly sorts ASC/DESC with: float', function (string $component, object $params) {
     livewire($component)
@@ -92,7 +90,7 @@ it('properly sorts ASC/DESC with: float', function (string $component, object $p
         ->assertSeeHtml('Dish A')
         ->assertSeeHtml('Dish B')
         ->assertDontSeeHtml('Zebra Dish H');
-})->with('sort_join');
+})->with('themes');
 
 it('properly sorts ASC/DESC with: boolean', function (string $component, object $params) {
     livewire($component)
@@ -105,7 +103,7 @@ it('properly sorts ASC/DESC with: boolean', function (string $component, object 
         ->set('sortDirection', 'desc')
         ->assertDontSeeHtml('Dish L')
         ->assertDontSeeHtml('Dish K');
-})->with('sort_join');
+})->with('themes');
 
 it('properly sorts ASC/DESC with: string-number', function (string $component, object $params) {
     livewire($component)
@@ -138,14 +136,7 @@ it('properly sorts ASC/DESC with: string-number', function (string $component, o
         ->assertSeeHtml('Dish B')
         ->assertSeeHtml('Dish K')
         ->assertDontSeeHtml('Dish A');
-})->with('sort_join');
-
-dataset('sort_join', [
-    'tailwind -> id'         => [DishesTable::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
-    'bootstrap -> id'        => [DishesTable::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
-    'tailwind -> dishes.id'  => [DishesTableWithJoin::class, (object) ['theme' => 'tailwind', 'field' => 'dishes.id']],
-    'bootstrap -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => 'bootstrap', 'field' => 'dishes.id']],
-]);
+})->with('themes');
 
 /**
  * Small Dish dataset for sorting test

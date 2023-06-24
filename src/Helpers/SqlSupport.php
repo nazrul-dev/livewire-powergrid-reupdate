@@ -3,8 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Helpers;
 
 use Exception;
-use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
-use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\{DB, Schema};
 
 class SqlSupport
@@ -14,11 +13,10 @@ class SqlSupport
      */
     private static array $sortStringNumberTypes = ['string', 'varchar', 'char'];
 
-    public static function like(EloquentBuilder|QueryBuilder $query = null): string
+    public static function like(Builder $query = null): string
     {
         if ($query) {
-            /** @phpstan-ignore-next-line  */
-            $driverName = $query->getConnection()->getConfig('driver');
+            $driverName = $query->getModel()->getConnection()->getDriverName();
         }
 
         if (!isset($driverName) or !is_string($driverName)) {
@@ -45,8 +43,8 @@ class SqlSupport
      */
     public static function sortStringAsNumber(string $sortField): string
     {
-        $driverName    = self::getDatabaseDriverName();
-        $driverVersion = self::getDatabaseVersion();
+        $driverName              = self::getDatabaseDriverName();
+        $driverVersion           = self::getDatabaseVersion();
 
         return self::getSortSqlByDriver($sortField, $driverName, $driverVersion);
     }
@@ -123,7 +121,6 @@ class SqlSupport
     public static function getSortFieldType(string $sortField): ?string
     {
         $data = explode('.', $sortField);
-
         if (!isset($data[1])) {
             return null;
         }
@@ -157,7 +154,7 @@ class SqlSupport
      */
     public static function getDatabaseVersion(): string
     {
-        $version = DB::getPdo()->getAttribute(intval(constant('PDO::ATTR_SERVER_VERSION')));
+        $version =   DB::getPdo()->getAttribute(intval(constant('PDO::ATTR_SERVER_VERSION')));
 
         if (!is_string($version)) {
             throw new \Exception('Could not get Database version');

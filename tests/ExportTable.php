@@ -6,22 +6,18 @@ use Illuminate\Database\Eloquent\Builder;
 use NumberFormatter;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
-use PowerComponents\LivewirePowerGrid\{
-    Button,
+use PowerComponents\LivewirePowerGrid\{Button,
     Column,
     Exportable,
     Footer,
     Header,
     PowerGrid,
-    PowerGridColumns,
     PowerGridComponent,
-    Traits\WithExport
-};
+    PowerGridEloquent};
 
 class ExportTable extends PowerGridComponent
 {
     use ActionButton;
-    use WithExport;
 
     public string $separator = ',';
 
@@ -52,11 +48,18 @@ class ExportTable extends PowerGridComponent
         return Dish::with('category');
     }
 
-    public function addColumns(): PowerGridColumns
+    public function inputRangeConfig(): array
+    {
+        return [
+            'price' => ['thousands' => '.', 'decimal' => ','],
+        ];
+    }
+
+    public function addColumns(): PowerGridEloquent
     {
         $fmt = new NumberFormatter('ca_ES', NumberFormatter::CURRENCY);
 
-        return PowerGrid::columns()
+        return PowerGrid::eloquent()
             ->addColumn('id')
             ->addColumn('name');
     }
@@ -78,6 +81,7 @@ class ExportTable extends PowerGridComponent
                 ->searchable()
                 ->editOnClick($canEdit)
                 ->clickToCopy(true)
+                ->makeInputText('name')
                 ->placeholder('Prato placeholder')
                 ->sortable(),
         ];

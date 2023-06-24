@@ -63,7 +63,6 @@ class InteractsWithVersions
             $json = file_get_contents(
                 'https://packagist.org/p2/power-components/livewire-powergrid.json'
             );
-
             if (is_string($json) === false) {
                 throw new Exception('Error: could not access PowerGrid versions URL');
             }
@@ -84,7 +83,6 @@ class InteractsWithVersions
 
         if (is_callable($resolver)) {
             $version = call_user_func($resolver);
-
             if (!is_string($version)) {
                 throw new Exception('Error: could find PowerGrid version.');
             }
