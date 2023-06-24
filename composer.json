@@ -5,13 +5,7 @@
     "license": "MIT",
     "minimum-stability": "dev",
     "prefer-stable": true,
-    "authors": [
-        {
-            "name": "Luan Freitas",
-            "email": "luanfreitasgoncalves@gmail.com",
-            "role": "Developer"
-        }
-    ],
+    
     "require": {
         "php": "^8.0",
         "livewire/livewire": "^2.10",
