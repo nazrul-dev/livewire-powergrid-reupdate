@@ -162,49 +162,38 @@ trait Filter
     public function datePickerChanged(array $data): void
     {
         $this->resetPage();
-
         $input = explode('.', $data['values']);
-
-        $startDate = strval(data_get($data, 'selectedDates.0'));
-        $endDate   = strval(data_get($data, 'selectedDates.1'));
-
-        $appTimeZone = strval(config('app.timezone'));
-
-        $filterTimezone = new DateTimeZone($data['timezone'] ?? 'UTC');
-
-        $startDate = Carbon::parse($startDate)->format('Y-m-d');
-        $endDate   = Carbon::parse($endDate)->format('Y-m-d');
-
-        $startDate = Carbon::createFromFormat('Y-m-d', $startDate, $filterTimezone);
-        $endDate   = Carbon::createFromFormat('Y-m-d', $endDate, $filterTimezone);
-
-        if ($data['type'] === 'datetime') {
-            $startDate->setTime(0, 0, 0)->setTimeZone($appTimeZone);
-            $endDate->setTime(23, 59, 59)->setTimeZone($appTimeZone);
+        $dataStr = $data['dateStr'];
+        $processedString = str_replace(' to ', ' ', $dataStr);
+        $array = explode(' ', $processedString);
+        if (count($array) === 1) {
+            $array[1] = $array[0];
         }
+        $dx[0] = Carbon::parse($array[0])->format('Y-m-d 01:00:00');
+        $dx[1] = Carbon::parse($array[1])->format('Y-m-d 23:59:59');
 
-        data_set($data, 'selectedDates.0', $startDate);
-        data_set($data, 'selectedDates.1', $endDate);
+        data_set($data, 'selectedDates.0',  $dx[0]);
+        data_set($data, 'selectedDates.1',  $dx[1]);
 
         $this->enabledFilters[$data['field']]['data-field'] = $data['field'];
         $this->enabledFilters[$data['field']]['label']      = $data['label'];
 
         if (count($input) === 3) {
-            $this->filters[$data['type']][$input[2]] = $data['selectedDates'];
+            $this->filters[$data['type']][$input[2]] = $dx;
             $this->persistState('filters');
 
             return;
         }
 
         if (count($input) === 4) {
-            $this->filters[$data['type']][$input[2] . '.' . $input[3]] = $data['selectedDates'];
+            $this->filters[$data['type']][$input[2] . '.' . $input[3]] = $dx;
             $this->persistState('filters');
 
             return;
         }
 
         if (count($input) === 5) {
-            $this->filters[$data['type']][$input[2] . '.' . $input[3] . '.' . $input[4]] = $data['selectedDates'];
+            $this->filters[$data['type']][$input[2] . '.' . $input[3] . '.' . $input[4]] = $dx;
             $this->persistState('filters');
         }
     }
