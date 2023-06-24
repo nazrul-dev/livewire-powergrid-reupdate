@@ -9,7 +9,7 @@ Welcome and thank you for your interest in contributing to our project!. You mus
 
 ## Guidelines
 
-`   🗒️ `  Please read the [Contributing Guide](https://github.com/Power-Components/livewire-powergrid/blob/main/CONTRIBUTING.md) and follow all steps listed there.
+`   🗒️ `  Please read the [Contributing Guide](https://github.com/nazrul-dev/livewire-powergrid/blob/main/CONTRIBUTING.md) and follow all steps listed there.
 
 `   ✍️ `  Give this PR a meaningful title.
 
@@ -33,11 +33,11 @@ This Pull Request adds...
 
 ### Contribution Guide
 
-- [ ] I have read and followed the steps listed in the [Contributing Guide](https://github.com/Power-Components/livewire-powergrid/blob/main/CONTRIBUTING.md).
+- [ ] I have read and followed the steps listed in the [Contributing Guide](https://github.com/nazrul-dev/livewire-powergrid/blob/main/CONTRIBUTING.md).
 
 ### Documentation
 
- This PR requires [Documentation](https://github.com/Power-Components/powergrid-doc) update?
+ This PR requires [Documentation](https://github.com/nazrul-dev/powergrid-doc) update?
 
 - [ ] Yes
 - [ ] No

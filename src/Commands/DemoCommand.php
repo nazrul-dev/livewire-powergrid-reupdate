@@ -24,7 +24,7 @@ class DemoCommand extends Command
 
     protected string $viewFolder;
 
-    protected string $link = 'https://github.com/Power-Components/livewire-powergrid';
+    protected string $link = 'https://github.com/nazrul-dev/livewire-powergrid';
 
     /**
      * @throws \Exception

@@ -3,7 +3,7 @@
         if (!window.Alpine) {
             // console.warn('Oops. Could not find Alpine. Are you sure you installed it? See: https://alpinejs.dev/', {
             //     alpine: 'https://alpinejs.dev/',
-            //     powergrid: 'https://github.com/Power-Components/livewire-powergrid',
+            //     powergrid: 'https://github.com/nazrul-dev/livewire-powergrid',
             // })
         }
     }

@@ -40,7 +40,7 @@ class InteractsWithVersions
     public function searchPackage(InstalledRepositoryInterface $localRepo): array
     {
         foreach ($localRepo->getPackages() as $package) {
-            if ($package->getName() === 'power-components/livewire-powergrid') {
+            if ($package->getName() === 'nazrul-dev/livewire-powergrid') {
                 return [
                     'version' => $package->getPrettyVersion(),
                     'release' => Carbon::parse($package->getReleaseDate())->format('M d, Y h:i A'),
@@ -61,7 +61,7 @@ class InteractsWithVersions
     {
         $resolver = static::$latestVersionResolver ?? function () {
             $json = file_get_contents(
-                'https://packagist.org/p2/power-components/livewire-powergrid.json'
+                'https://packagist.org/p2/nazrul-dev/livewire-powergrid.json'
             );
             if (is_string($json) === false) {
                 throw new Exception('Error: could not access PowerGrid versions URL');
@@ -71,7 +71,7 @@ class InteractsWithVersions
             $package = json_decode($json, true);
 
             /** @phpstan-ignore-next-line */
-            $version = collect($package['packages']['power-components/livewire-powergrid'])
+            $version = collect($package['packages']['nazrul-dev/livewire-powergrid'])
                     ->first()['version'];
 
             if (!is_string($version)) {

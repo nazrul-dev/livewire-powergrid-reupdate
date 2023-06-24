@@ -12,7 +12,7 @@ Thank you for reporting a bug and helping us to improve our software!
 
 `   🐛 `   We use GitHub Issues **EXCLUSIVELY** for tracking bugs and unexpected software behavior.
 
-`   🙏 `  Questions like _"How to...",_ "_how can I..."_, _"I would like to..."_ should be posted in the [Discussions](https://github.com/Power-Components/livewire-powergrid/discussions) tab.
+`   🙏 `  Questions like _"How to...",_ "_how can I..."_, _"I would like to..."_ should be posted in the [Discussions](https://github.com/nazrul-dev/livewire-powergrid/discussions) tab.
 
 `   ✍️ `  Give this report a short but meaningful title. Make it easy to spot for others who might be facing the same issue.
 

@@ -205,7 +205,7 @@ class CreateCommand extends Command
 
         $this->info("\n⚡ Your PowerGrid table can be now included with the tag: <comment>" . $this->componentName . '</comment>');
 
-        $this->info("\n\n⭐ <comment>" . self::thanks() . "</comment> Please consider <comment>starring</comment> our repository at <comment>https://github.com/Power-Components/livewire-powergrid</comment> ⭐\n");
+        $this->info("\n\n⭐ <comment>" . self::thanks() . "</comment> Please consider <comment>starring</comment> our repository at <comment>https://github.com/nazrul-dev/livewire-powergrid</comment> ⭐\n");
     }
 
     protected function thanks(): string
