@@ -169,7 +169,7 @@ trait Filter
         if (count($array) === 1) {
             $array[1] = $array[0];
         }
-        $dx[0] = Carbon::parse($array[0])->format('Y-m-d 01:00:00');
+        $dx[0] = Carbon::parse($array[0])->format('Y-m-d 00:00:00');
         $dx[1] = Carbon::parse($array[1])->format('Y-m-d 23:59:59');
 
         data_set($data, 'selectedDates.0',  $dx[0]);
