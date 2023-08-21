@@ -443,6 +443,16 @@ final class Column
         return $this;
     }
 
+    public function makeInputNumber($dataField = ''): Column
+    {
+        $this->inputs['number']['enabled'] = true;
+        if (filled($dataField)) {
+            $this->dataField = $dataField;
+        }
+
+        return $this;
+    }
+
     /**
      * @return $this
      */
