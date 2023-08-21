@@ -102,6 +102,19 @@ class FillableTable
 
                     continue;
                 }
+                if ($column->getType()->getName() === 'string') {
+                    $datasource .= "\n" . '            ->addColumn(\'' . $field . '\')';
+                    $columns    .= '            Column::make(\'' . $title . '\', \'' . $field . '\')' . "\n" . '                ->sortable()' . "\n" . '                ->searchable()' . "\n" . '                ->makeInputNumber(),' . "\n\n";
+
+                    if (!self::$hasEscapeExample) {
+                        $datasource .= "\n\n           /** Example of custom column using a closure **/\n" . '            ->addColumn(\'' . $field . '_lower\', function (' . $modelUnqualifiedName . ' $model) {
+                return strtolower(e($model->' . $field . '));
+            })' . "\n";
+                        self::$hasEscapeExample = true;
+                    }
+
+                    continue;
+                }
 
                 $datasource .= "\n" . '            ->addColumn(\'' . $field . '\')';
                 $columns    .= '            Column::make(\'' . $title . '\', \'' . $field . '\')' . "\n" . '                ->sortable()' . "\n" . '                ->searchable(),' . "\n\n";
